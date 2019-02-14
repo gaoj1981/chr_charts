@@ -1,14 +1,34 @@
 import React, { PureComponent } from 'react';
-import { Input, Select, DatePicker, Form } from 'antd';
+import { Input, Select, DatePicker, Form, InputNumber } from 'antd';
+import moment from 'moment';
 
 const InputGroup = Input.Group;
 const { Option } = Select;
-const { RangePicker } = DatePicker;
+const { RangePicker, MonthPicker } = DatePicker;
+const monthFormat = 'YYYY/MM';
+const dayFormat = 'YYYY/MM/DD';
+
 @Form.create()
 class GrupInput extends PureComponent {
   state = {
     opVal: 'date',
   };
+
+  getDay() {
+    const { form } = this.props;
+    const { getFieldValue } = form;
+    const month = getFieldValue('month');
+    const thisDays = moment(month, monthFormat).daysInMonth();
+    const day = [];
+    for (let i = 1; i <= thisDays; i += 1) {
+      day.push(i);
+    }
+    const children = [];
+    day.forEach(v => {
+      children.push(<Option key={v}>{v}</Option>);
+    });
+    return children;
+  }
 
   handleOption = value => {
     this.setState({
@@ -20,6 +40,13 @@ class GrupInput extends PureComponent {
     const { form } = this.props;
     const { opVal } = this.state;
     const { getFieldDecorator } = form;
+    const now = new Date();
+    const year = now.getFullYear();
+    const day = now.getDate();
+    const month = now.getMonth() + 1;
+    let clock = `${year}-`;
+    if (month < 10) clock += '0';
+    clock += `${month}`;
     const children = [];
     switch (opVal) {
       case 'date':
@@ -43,6 +70,12 @@ class GrupInput extends PureComponent {
               </Option>
               <Option key="3" value="last">
                 last
+              </Option>
+              <Option key="4" value="day1">
+                day1
+              </Option>
+              <Option key="5" value="day2">
+                day2
               </Option>
             </Select>
             {getFieldDecorator('days', {
@@ -77,6 +110,12 @@ class GrupInput extends PureComponent {
               <Option key="3" value="last">
                 last
               </Option>
+              <Option key="4" value="day1">
+                day1
+              </Option>
+              <Option key="5" value="day2">
+                day2
+              </Option>
             </Select>
             <span style={{ width: '70%' }}>
               {getFieldDecorator('Minimum', {
@@ -91,7 +130,7 @@ class GrupInput extends PureComponent {
                   },
                 ],
               })(
-                <Input
+                <InputNumber
                   style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
                   placeholder="Minimum"
                 />
@@ -108,7 +147,7 @@ class GrupInput extends PureComponent {
                   },
                 ],
               })(
-                <Input
+                <InputNumber
                   style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
                   placeholder="Maximum"
                 />
@@ -138,6 +177,12 @@ class GrupInput extends PureComponent {
               <Option key="3" value="last">
                 last
               </Option>
+              <Option key="4" value="day1">
+                day1
+              </Option>
+              <Option key="5" value="day2">
+                day2
+              </Option>
             </Select>
             {getFieldDecorator('lastimum', {
               rules: [
@@ -151,11 +196,106 @@ class GrupInput extends PureComponent {
                 },
               ],
             })(
-              <Input
-                style={{ width: '70%', textAlign: 'center', borderLeft: 0 }}
+              <InputNumber
+                min={2}
+                max={1000000}
+                style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
                 placeholder="last"
               />
             )}
+          </InputGroup>
+        );
+      case 'day1':
+        return (
+          <InputGroup compact>
+            <Select
+              showSearch
+              style={{ width: '30%' }}
+              value={opVal}
+              optionFilterProp="children"
+              onChange={this.handleOption}
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option key="1" value="date">
+                date
+              </Option>
+              <Option key="2" value="region">
+                region
+              </Option>
+              <Option key="3" value="last">
+                last
+              </Option>
+              <Option key="4" value="day1">
+                day1
+              </Option>
+              <Option key="5" value="day2">
+                day2
+              </Option>
+            </Select>
+            <span style={{ width: '70%' }}>
+              {getFieldDecorator('month', {
+                initialValue: moment(clock, monthFormat) || '',
+                rules: [
+                  {
+                    required: true,
+                    message: '必须填!',
+                  },
+                ],
+              })(<MonthPicker style={{ width: '50%' }} format={monthFormat} />)}
+              {getFieldDecorator('mayDay', {
+                initialValue: day || '',
+                rules: [
+                  {
+                    required: true,
+                    message: '必须填!',
+                  },
+                ],
+              })(<Select style={{ width: '50%' }}>{this.getDay()}</Select>)}
+            </span>
+          </InputGroup>
+        );
+      case 'day2':
+        return (
+          <InputGroup compact>
+            <Select
+              showSearch
+              style={{ width: '30%' }}
+              value={opVal}
+              optionFilterProp="children"
+              onChange={this.handleOption}
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              <Option key="1" value="date">
+                date
+              </Option>
+              <Option key="2" value="region">
+                region
+              </Option>
+              <Option key="3" value="last">
+                last
+              </Option>
+              <Option key="4" value="day1">
+                day1
+              </Option>
+              <Option key="5" value="day2">
+                day2
+              </Option>
+            </Select>
+            <span style={{ width: '70%' }}>
+              {getFieldDecorator('monthDay', {
+                initialValue: moment(now, dayFormat) || '',
+                rules: [
+                  {
+                    required: true,
+                    message: '必须填!',
+                  },
+                ],
+              })(<DatePicker />)}
+            </span>
           </InputGroup>
         );
       default:

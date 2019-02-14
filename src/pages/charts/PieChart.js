@@ -28,20 +28,21 @@ class pieChart extends React.Component {
         <Chart height={400} data={dv} scale={cols} forceFit>
           <Coord type="theta" radius={0.75} />
           <Axis name="percent" />
-          <Legend onClick={() => false} />
+          <Legend />
           <Tooltip
             showTitle={false}
-            itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>'
+            itemTpl='<li><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}({number})</li>'
           />
           <Geom
             type="intervalStack"
             position="percent"
             color={['item', ['#09BB07', 'red']]}
             tooltip={[
-              'item*percent',
-              (item, percent) => ({
+              'item*percent*nub',
+              (item, percent, nub) => ({
                 name: item,
-                value: percent,
+                value: `${(percent * 100).toFixed(2)}%`,
+                number: nub,
               }),
             ]}
             style={{

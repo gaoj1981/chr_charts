@@ -1,14 +1,16 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
 import { saveAs } from 'file-saver';
-import { Form, Row, Col, Button, Select, Card, message, InputNumber } from 'antd';
+import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon } from 'antd';
+import moment from 'moment';
 import PieChart from './charts/PieChart';
 import OverPillar from './charts/OverPillar';
 import GrupInput from './charts/GrupInput';
 
 const OfflineData = React.lazy(() => import('./charts/OfflineData'));
-
+const monthFormat = 'YYYY-MM';
 const { Option } = Select;
+
 @Form.create()
 @connect(({ charts, loading }) => ({
   getLingJian: charts.getLingJian,
@@ -125,16 +127,24 @@ class Index extends Component {
       const { getLingJian } = this.props;
       const set = new Set(getLingJian);
       if (set) {
-        set.forEach(v => {
-          optionData.push(<Option key={v}>{v}</Option>);
+        set.forEach((v, i) => {
+          optionData.push(
+            <Option value={i} key={v}>
+              {v}
+            </Option>
+          );
         });
       }
     } else {
       const { getHost } = this.props;
       const set = new Set(getHost);
       if (set) {
-        set.forEach(v => {
-          optionData.push(<Option key={v}>{v}</Option>);
+        set.forEach((v, i) => {
+          optionData.push(
+            <Option value={i} key={v}>
+              {v}
+            </Option>
+          );
         });
       }
     }
@@ -156,11 +166,21 @@ class Index extends Component {
       const parm = {
         hosts: [values.hosts],
         partStyle: values.lingjian,
-        start: values.days ? values.days[0].format('YYYY-MM-DD HH:mm:ss') : null,
-        end: values.days ? values.days[1].format('YYYY-MM-DD HH:mm:ss') : null,
+        start: values.days ? `${values.days[0].format('YYYY-MM-DD')} 00:00:00` : null,
+        end: values.days ? `${values.days[1].format('YYYY-MM-DD')} 23:59:59` : null,
         scanScope: values.Minimum ? [Number(values.Minimum), Number(values.Maximum)] : null,
         limit: values.lastimum || null,
       };
+      if (values.mayDay) {
+        let { mayDay } = values;
+        if (mayDay < 10) mayDay = `0${mayDay}`;
+        parm.start = `${moment(values.month, monthFormat).format('YYYY-MM')}-${mayDay} 00:00:00`;
+        parm.end = `${moment(values.month, monthFormat).format('YYYY-MM')}-${mayDay} 23:59:59`;
+      }
+      if (values.monthDay) {
+        parm.start = `${values.monthDay.format('YYYY-MM-DD')} 00:00:00`;
+        parm.end = `${values.monthDay.format('YYYY-MM-DD')} 23:59:59`;
+      }
       this.getGroupResult(parm);
     });
   };
@@ -238,7 +258,7 @@ class Index extends Component {
   handleCSV = () => {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
-    const thisDate = `宽度${this.getTimeFormatter()}.csv`;
+    const thisDate = `Width${this.getTimeFormatter()}.csv`;
     if (getAnalyze[0]) {
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].width.maximum},${
@@ -254,7 +274,7 @@ class Index extends Component {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `高度${this.getTimeFormatter()}.csv`;
+      const thisDate = `Height${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].height.maximum},${
           zone[0].zones[v.z].height.minimum
@@ -269,7 +289,7 @@ class Index extends Component {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `高度${this.getTimeFormatter()}.csv`;
+      const thisDate = `Volume${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.v},${v.V[0]},${v.V[1]},${zone[0].zones[v.z].volume.maximum},${
           zone[0].zones[v.z].volume.minimum
@@ -284,9 +304,8 @@ class Index extends Component {
     let csvArr = 'name,pass,fail';
     const { groupResult } = this.props;
     if (groupResult[0]) {
-      const thisDate = `合格率${this.getTimeFormatter()}.csv`;
+      const thisDate = `Pass${this.getTimeFormatter()}.csv`;
       groupResult.forEach(v => {
-        console.log(v);
         csvArr += `\n${v.partStyle},${v.Pass},${v.Fail},`;
       });
       const blob = new Blob([csvArr], { type: 'text/plain;charset=utf-8' });
@@ -302,15 +321,15 @@ class Index extends Component {
     const hh = now.getHours();
     const mm = now.getMinutes();
     const ss = now.getSeconds();
-    let clock = `${year}-`;
+    let clock = `${year}`;
     if (month < 10) clock += '0';
-    clock += `${month}-`;
+    clock += `${month}`;
     if (day < 10) clock += '0';
-    clock += `${day} `;
+    clock += `${day}`;
     if (hh < 10) clock += '0';
-    clock += `${hh}：`;
+    clock += `${hh}`;
     if (mm < 10) clock += '0';
-    clock += `${mm}：`;
+    clock += `${mm}`;
     if (ss < 10) clock += '0';
     clock += ss;
     return clock;
@@ -335,9 +354,8 @@ class Index extends Component {
       const passNub = pass / all;
       const Pass = Math.floor(passNub * 10000);
       const Fail = 10000 - Pass;
-      Piedata.push({ item: 'Pass', count: Pass / 10000 });
-      Piedata.push({ item: 'Fail', count: Fail / 10000 });
-      console.log(Piedata);
+      Piedata.push({ item: 'Pass', count: Pass / 10000, nub: pass });
+      Piedata.push({ item: 'Fail', count: Fail / 10000, nub: all - pass });
       getAnalyze.forEach(v => {
         const aar = {
           x: v.id,
@@ -374,36 +392,52 @@ class Index extends Component {
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
         <Card
-          title="宽度"
+          title="Width"
           bordered={false}
-          extra={<Button onClick={() => this.handleCSV()}>导出</Button>}
+          extra={
+            <Button onClick={() => this.handleCSV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
         >
           <Suspense fallback={null}>
             <OfflineData loading={loading} offlineChartData={carr} />
           </Suspense>
         </Card>
         <Card
-          title="高度"
+          title="Height"
           bordered={false}
-          extra={<Button onClick={() => this.handleCSVHigth()}>导出</Button>}
+          extra={
+            <Button onClick={() => this.handleCSVHigth()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
         >
           <Suspense fallback={null}>
             <OfflineData loading={loading} offlineChartData={carr2} />
           </Suspense>
         </Card>
         <Card
-          title="体积"
+          title="Volume"
           bordered={false}
-          extra={<Button onClick={() => this.handleCSVV()}>导出</Button>}
+          extra={
+            <Button onClick={() => this.handleCSVV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
         >
           <Suspense fallback={null}>
             <OfflineData loading={loading} offlineChartData={carr1} />
           </Suspense>
         </Card>
         <Card
-          title="合格率"
+          title="Pass rate"
           bordered={false}
-          extra={<Button onClick={() => this.handleHeGeCSV()}>导出</Button>}
+          extra={
+            <Button onClick={() => this.handleHeGeCSV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
         >
           <Row>
             <Col span={12}>

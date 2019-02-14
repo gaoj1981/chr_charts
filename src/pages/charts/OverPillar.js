@@ -28,17 +28,32 @@ class OverPillar extends React.Component {
         },
       },
     };
+    const tooltipCfg = {
+      itemTpl:
+        '<li data-index={index}><span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>{name}:{value} ({number}) </li>',
+    };
+
     return (
       <div>
         <Chart height={400} data={dv} scale={cols} forceFit>
           <Legend name="country" />
           <Axis name="year" />
           <Axis name="percent" />
-          <Tooltip />
+          <Tooltip {...tooltipCfg} />
           <Geom
             type="intervalStack"
             position="year*percent"
             color={['country', ['#09BB07', 'red']]}
+            tooltip={[
+              'year*percent*country*value',
+              (year, percent, country, value) => {
+                return {
+                  //自定义 tooltip 上显示的 title 显示内容等。
+                  value: (percent * 100).toFixed(2) + '%',
+                  number: value,
+                };
+              },
+            ]}
           />
         </Chart>
       </div>
