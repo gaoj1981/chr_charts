@@ -431,7 +431,7 @@ class Index extends Component {
           </Suspense>
         </Card>
         <Card
-          title="Pass rate"
+          title="Pass/Fail"
           bordered={false}
           extra={
             <Button onClick={() => this.handleHeGeCSV()}>
