@@ -83,10 +83,10 @@ class GrupInput extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: '必须填!',
+                  message: 'Mast fill in!',
                 },
               ],
-            })(<RangePicker style={{ width: '70%' }} />)}
+            })(<RangePicker placeholder={['Start Time', 'End Time']} style={{ width: '70%' }} />)}
           </InputGroup>
         );
       case 'region':
@@ -123,11 +123,11 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                   {
                     pattern: /^(\d+)((?:\.\d+)?)$/,
-                    message: '请输数字',
+                    message: 'please enter a number',
                   },
                 ],
               })(
@@ -140,11 +140,11 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                   {
                     pattern: /^(\d+)((?:\.\d+)?)$/,
-                    message: '请输数字',
+                    message: 'please enter a number',
                   },
                 ],
               })(
@@ -189,11 +189,11 @@ class GrupInput extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: '必须填!',
+                  message: 'Mast fill in!',
                 },
                 {
                   pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输数字',
+                  message: 'please enter a number',
                 },
               ],
             })(
@@ -241,7 +241,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                 ],
               })(<MonthPicker style={{ width: '50%' }} format={monthFormat} />)}
@@ -250,7 +250,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                 ],
               })(<Select style={{ width: '50%' }}>{this.getDay()}</Select>)}
@@ -292,7 +292,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                 ],
               })(<DatePicker />)}

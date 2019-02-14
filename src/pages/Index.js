@@ -59,7 +59,7 @@ class Index extends Component {
                 rules: [
                   {
                     required: i < 2,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                 ],
               })(this.filterChild(i))}
@@ -70,7 +70,7 @@ class Index extends Component {
                 rules: [
                   {
                     required: i < 2,
-                    message: '必须填!',
+                    message: 'Mast fill in!',
                   },
                 ],
               })(this.filterChild(i))}
@@ -209,7 +209,7 @@ class Index extends Component {
       callback: () => {
         const { groupResult } = this.props;
         if (!groupResult[0]) {
-          message.warning('数据不存在');
+          message.warning('Data does not exist');
         } else {
           this.getZone(parm);
         }
@@ -226,7 +226,7 @@ class Index extends Component {
       callback: () => {
         const { zone } = this.props;
         if (!zone[0]) {
-          message.warning('数据不存在');
+          message.warning('Data does not exist');
         } else {
           this.getAnalyze(parmZone);
         }
@@ -243,7 +243,7 @@ class Index extends Component {
       callback: () => {
         const { getAnalyze } = this.props;
         if (!getAnalyze[0]) {
-          message.warning('数据不存在');
+          message.warning('Data does not exist');
         }
       },
     });
