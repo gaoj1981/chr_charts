@@ -209,7 +209,7 @@ class Index extends Component {
       callback: () => {
         const { groupResult } = this.props;
         if (!groupResult[0]) {
-          message.warning('Data not exist');
+          message.warning('data not exists');
         } else {
           this.getZone(parm);
         }
@@ -226,7 +226,7 @@ class Index extends Component {
       callback: () => {
         const { zone } = this.props;
         if (!zone[0]) {
-          message.warning('Data not exist');
+          message.warning('data not exists');
         } else {
           this.getAnalyze(parmZone);
         }
@@ -243,7 +243,7 @@ class Index extends Component {
       callback: () => {
         const { getAnalyze } = this.props;
         if (!getAnalyze[0]) {
-          message.warning('Data not exist');
+          message.warning('data not exists');
         }
       },
     });
