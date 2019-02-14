@@ -14,6 +14,7 @@ class GrupInput extends PureComponent {
     opVal: 'date',
   };
 
+  // 获取月份中的日期
   getDay() {
     const { form } = this.props;
     const { getFieldValue } = form;
