@@ -83,7 +83,7 @@ class GrupInput extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: 'Mast fill in!',
+                  message: 'required!',
                 },
               ],
             })(<RangePicker placeholder={['Start Time', 'End Time']} style={{ width: '70%' }} />)}
@@ -123,7 +123,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: 'Mast fill in!',
+                    message: 'required!',
                   },
                   {
                     pattern: /^(\d+)((?:\.\d+)?)$/,
@@ -189,7 +189,7 @@ class GrupInput extends PureComponent {
               rules: [
                 {
                   required: true,
-                  message: 'Mast fill in!',
+                  message: 'required!',
                 },
                 {
                   pattern: /^(\d+)((?:\.\d+)?)$/,
@@ -241,7 +241,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: 'Mast fill in!',
+                    message: 'required!',
                   },
                 ],
               })(<MonthPicker style={{ width: '50%' }} format={monthFormat} />)}
@@ -250,7 +250,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: 'Mast fill in!',
+                    message: 'required!',
                   },
                 ],
               })(<Select style={{ width: '50%' }}>{this.getDay()}</Select>)}
@@ -292,7 +292,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: 'Mast fill in!',
+                    message: 'required!',
                   },
                 ],
               })(<DatePicker />)}
