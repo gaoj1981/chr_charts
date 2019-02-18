@@ -66,8 +66,8 @@ class GrupInput extends PureComponent {
               <Option key="1" value="date">
                 date
               </Option>
-              <Option key="2" value="region">
-                region
+              <Option key="2" value="scan">
+                scan
               </Option>
               <Option key="3" value="last">
                 last
@@ -89,7 +89,7 @@ class GrupInput extends PureComponent {
             })(<RangePicker placeholder={['Start Time', 'End Time']} style={{ width: '70%' }} />)}
           </InputGroup>
         );
-      case 'region':
+      case 'scan':
         return (
           <InputGroup compact>
             <Select
@@ -105,8 +105,8 @@ class GrupInput extends PureComponent {
               <Option key="1" value="date">
                 date
               </Option>
-              <Option key="2" value="region">
-                region
+              <Option key="2" value="scan">
+                scan
               </Option>
               <Option key="3" value="last">
                 last
@@ -172,8 +172,8 @@ class GrupInput extends PureComponent {
               <Option key="1" value="date">
                 date
               </Option>
-              <Option key="2" value="region">
-                region
+              <Option key="2" value="scan">
+                scan
               </Option>
               <Option key="3" value="last">
                 last
@@ -222,8 +222,8 @@ class GrupInput extends PureComponent {
               <Option key="1" value="date">
                 date
               </Option>
-              <Option key="2" value="region">
-                region
+              <Option key="2" value="scan">
+                scan
               </Option>
               <Option key="3" value="last">
                 last
@@ -273,8 +273,8 @@ class GrupInput extends PureComponent {
               <Option key="1" value="date">
                 date
               </Option>
-              <Option key="2" value="region">
-                region
+              <Option key="2" value="scan">
+                scan
               </Option>
               <Option key="3" value="last">
                 last
