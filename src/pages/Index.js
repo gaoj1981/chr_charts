@@ -26,11 +26,6 @@ class Index extends Component {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'charts/reqCommon',
-      service: 'getLingJian',
-    });
     this.getHost();
   }
 
@@ -97,10 +92,10 @@ class Index extends Component {
     let children = null;
     switch (index) {
       case 0:
-        children = <Select>{this.fileOption(0)}</Select>;
+        children = <Select onChange={this.handleHost}>{this.fileOption(0)}</Select>;
         break;
       case 1:
-        children = <Select>{this.fileOption(1)}</Select>;
+        children = <Select onChange={this.handleStyle}>{this.fileOption(1)}</Select>;
         break;
       case 2:
         // children= <RangePicker format="YYYY-MM-DD" />;
@@ -157,11 +152,7 @@ class Index extends Component {
     const { validateFields } = form;
     validateFields((err, values) => {
       if (err) return;
-      const { dispatch } = this.props;
-      dispatch({
-        type: 'charts/cleanEditState',
-        payload: {},
-      });
+      this.cleanDate();
 
       const parm = {
         hosts: [values.hosts],
@@ -253,6 +244,22 @@ class Index extends Component {
     const { form } = this.props;
     const { resetFields } = form;
     resetFields();
+    this.cleanDate();
+  };
+
+  handleHost = value => {
+    this.handleReset();
+    const { dispatch } = this.props;
+    const hosts = { hosts: value };
+    dispatch({
+      type: 'charts/reqCommon',
+      service: 'getLingJian',
+      payload: hosts,
+    });
+  };
+
+  handleStyle = () => {
+    this.cleanDate();
   };
 
   handleCSV = () => {
@@ -334,6 +341,14 @@ class Index extends Component {
     clock += ss;
     return clock;
   };
+
+  cleanDate() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'charts/cleanEditState',
+      payload: {},
+    });
+  }
 
   render() {
     const { getAnalyze, zone, loading, groupResult } = this.props;
