@@ -24,6 +24,7 @@ const { TabPane } = Tabs;
 class Index extends Component {
   state = {
     expand: false,
+    tabType: '1',
   };
 
   componentDidMount() {
@@ -343,6 +344,12 @@ class Index extends Component {
     return clock;
   };
 
+  handleChangeTab = key => {
+    this.setState({
+      tabType: key,
+    });
+  };
+
   cleanDate() {
     const { dispatch } = this.props;
     dispatch({
@@ -353,6 +360,7 @@ class Index extends Component {
 
   render() {
     const { getAnalyze, zone, loading, groupResult } = this.props;
+    const { tabType } = this.state;
     const Piedata = [];
     const overPill = [];
     const carr = [];
@@ -407,7 +415,7 @@ class Index extends Component {
         <Form onSubmit={this.handleSearch}>
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
           <TabPane tab="Width" key="1">
             <Card
               title="Width"
@@ -419,7 +427,7 @@ class Index extends Component {
               }
             >
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr} />
+                <OfflineData loading={loading} offlineChartData={tabType === '1' ? carr : []} />
               </Suspense>
             </Card>
           </TabPane>
@@ -434,7 +442,7 @@ class Index extends Component {
               }
             >
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr2} />
+                <OfflineData loading={loading} offlineChartData={tabType === '2' ? carr2 : []} />
               </Suspense>
             </Card>
           </TabPane>
@@ -449,7 +457,7 @@ class Index extends Component {
               }
             >
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr1} />
+                <OfflineData loading={loading} offlineChartData={tabType === '3' ? carr1 : []} />
               </Suspense>
             </Card>
           </TabPane>
@@ -465,10 +473,10 @@ class Index extends Component {
             >
               <Row>
                 <Col span={12}>
-                  <PieChart data={Piedata} />
+                  <PieChart data={tabType === '4' ? Piedata : []} />
                 </Col>
                 <Col span={12}>
-                  <OverPillar data={overPill} />
+                  <OverPillar data={tabType === '4' ? overPill : []} />
                 </Col>
               </Row>
             </Card>
