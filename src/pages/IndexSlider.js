@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
 import { saveAs } from 'file-saver';
-import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon, Tabs } from 'antd';
+import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon } from 'antd';
 import moment from 'moment';
 import PieChart from './charts/PieChart';
 import OverPillar from './charts/OverPillar';
@@ -10,7 +10,6 @@ import GrupInput from './charts/GrupInput';
 const OfflineData = React.lazy(() => import('./charts/OfflineData'));
 const monthFormat = 'YYYY-MM';
 const { Option } = Select;
-const { TabPane } = Tabs;
 
 @Form.create()
 @connect(({ charts, loading }) => ({
@@ -407,73 +406,63 @@ class Index extends Component {
         <Form onSubmit={this.handleSearch}>
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Width" key="1">
-            <Card
-              title="Width"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
-              <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr} />
-              </Suspense>
-            </Card>
-          </TabPane>
-          <TabPane tab="Height" key="2">
-            <Card
-              title="Height"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSVHigth()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
-              <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr2} />
-              </Suspense>
-            </Card>
-          </TabPane>
-          <TabPane tab="Volume" key="3">
-            <Card
-              title="Volume"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSVV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
-              <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={carr1} />
-              </Suspense>
-            </Card>
-          </TabPane>
-          <TabPane tab="Pass/Fail" key="4">
-            <Card
-              title="Pass/Fail"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleHeGeCSV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
-              <Row>
-                <Col span={12}>
-                  <PieChart data={Piedata} />
-                </Col>
-                <Col span={12}>
-                  <OverPillar data={overPill} />
-                </Col>
-              </Row>
-            </Card>
-          </TabPane>
-        </Tabs>
+        <Card
+          title="Width"
+          bordered={false}
+          extra={
+            <Button onClick={() => this.handleCSV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
+        >
+          <Suspense fallback={null}>
+            <OfflineData loading={loading} offlineChartData={carr} />
+          </Suspense>
+        </Card>
+        <Card
+          title="Height"
+          bordered={false}
+          extra={
+            <Button onClick={() => this.handleCSVHigth()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
+        >
+          <Suspense fallback={null}>
+            <OfflineData loading={loading} offlineChartData={carr2} />
+          </Suspense>
+        </Card>
+        <Card
+          title="Volume"
+          bordered={false}
+          extra={
+            <Button onClick={() => this.handleCSVV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
+        >
+          <Suspense fallback={null}>
+            <OfflineData loading={loading} offlineChartData={carr1} />
+          </Suspense>
+        </Card>
+        <Card
+          title="Pass/Fail"
+          bordered={false}
+          extra={
+            <Button onClick={() => this.handleHeGeCSV()}>
+              <Icon type="upload" /> export
+            </Button>
+          }
+        >
+          <Row>
+            <Col span={12}>
+              <PieChart data={Piedata} />
+            </Col>
+            <Col span={12}>
+              <OverPillar data={overPill} />
+            </Col>
+          </Row>
+        </Card>
       </Card>
     );
   }
