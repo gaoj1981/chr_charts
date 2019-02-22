@@ -7,7 +7,7 @@ const OfflineData = ({ loading, offlineChartData }) => (
   <Card loading={loading} className={styles.offlineCard} bordered={false} style={{ marginTop: 32 }}>
     <div style={{ padding: '0 24px' }}>
       <TimelineChart
-        height={350}
+        height={400}
         data={offlineChartData}
         titleMap={{
           y1: '平均值 ',

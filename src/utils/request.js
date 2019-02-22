@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
@@ -23,10 +23,11 @@ const codeMessage = {
 };
 
 const checkStatus = response => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= 200 && response.status <= 400) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
+  // 加上key，只显示一条错误提示
   notification.error({ key: '123', message: `请求错误 ${response.statusText}` });
   const error = new Error(errortext);
   error.name = response.status;
@@ -142,7 +143,7 @@ export default function request(url, option) {
         return;
       }
       if (status <= 504 && status >= 500) {
-        router.push('/exception/500');
+        message.error('服务未启动', 0);
         return;
       }
       if (status >= 404 && status < 422) {

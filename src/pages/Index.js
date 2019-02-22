@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
 import { saveAs } from 'file-saver';
-import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon, Tabs } from 'antd';
+import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon, Tabs, Spin } from 'antd';
 import moment from 'moment';
 import PieChart from './charts/PieChart';
 import OverPillar from './charts/OverPillar';
@@ -13,18 +13,18 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 @Form.create()
-@connect(({ charts, loading }) => ({
+@connect(({ charts }) => ({
   getLingJian: charts.getLingJian,
   getAnalyze: charts.getAnalyze,
   groupResult: charts.groupResult,
   getHost: charts.getHost,
   zone: charts.zone,
-  loading: loading.effects['charts/reqCommon'],
 }))
 class Index extends Component {
   state = {
     expand: false,
     tabType: '1',
+    myLoading: 0,
   };
 
   componentDidMount() {
@@ -40,7 +40,7 @@ class Index extends Component {
   };
 
   getFields() {
-    const { expand } = this.state;
+    const { expand, myLoading } = this.state;
     const { form } = this.props;
     const count = expand ? 6 : 3;
     const { getFieldDecorator } = form;
@@ -81,7 +81,7 @@ class Index extends Component {
         <Button icon="search" type="primary" htmlType="submit">
           Search
         </Button>
-        <Button style={{ marginLeft: 10 }} onClick={this.handleReset}>
+        <Button style={{ marginLeft: 10 }} onClick={this.handleReset} disabled={myLoading === 1}>
           Clear
         </Button>
       </Col>
@@ -155,7 +155,6 @@ class Index extends Component {
     validateFields((err, values) => {
       if (err) return;
       this.cleanDate();
-
       const parm = {
         hosts: [values.hosts],
         partStyle: values.lingjian,
@@ -186,6 +185,9 @@ class Index extends Component {
 
   // 饼图数据
   getGroupResult = parm => {
+    this.setState({
+      myLoading: 1,
+    });
     const { dispatch } = this.props;
     const groupParm = {
       hosts: parm.hosts,
@@ -238,6 +240,9 @@ class Index extends Component {
         if (!getAnalyze[0]) {
           message.warning('data not exists');
         }
+        this.setState({
+          myLoading: 0,
+        });
       },
     });
   };
@@ -267,7 +272,7 @@ class Index extends Component {
   handleCSV = () => {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
-    const thisDate = `Width${this.getTimeFormatter()}.csv`;
+    const thisDate = `Width_${this.getTimeFormatter()}.csv`;
     if (getAnalyze[0]) {
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].width.maximum},${
@@ -283,7 +288,7 @@ class Index extends Component {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `Height${this.getTimeFormatter()}.csv`;
+      const thisDate = `Height_${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].height.maximum},${
           zone[0].zones[v.z].height.minimum
@@ -298,7 +303,7 @@ class Index extends Component {
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `Volume${this.getTimeFormatter()}.csv`;
+      const thisDate = `Volume_${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.v},${v.V[0]},${v.V[1]},${zone[0].zones[v.z].volume.maximum},${
           zone[0].zones[v.z].volume.minimum
@@ -313,7 +318,7 @@ class Index extends Component {
     let csvArr = 'name,pass,fail';
     const { groupResult } = this.props;
     if (groupResult[0]) {
-      const thisDate = `Pass${this.getTimeFormatter()}.csv`;
+      const thisDate = `Pass_${this.getTimeFormatter()}.csv`;
       groupResult.forEach(v => {
         csvArr += `\n${v.partStyle},${v.Pass},${v.Fail},`;
       });
@@ -350,6 +355,27 @@ class Index extends Component {
     });
   };
 
+  handleExport = () => {
+    const { tabType } = this.state;
+    switch (tabType) {
+      case '1':
+        this.handleCSV();
+        break;
+      case '2':
+        this.handleCSVHigth();
+        break;
+      case '3':
+        this.handleCSVV();
+        break;
+      case '4':
+        this.handleHeGeCSV();
+        break;
+      default:
+        break;
+    }
+    return null;
+  };
+
   cleanDate() {
     const { dispatch } = this.props;
     dispatch({
@@ -360,7 +386,7 @@ class Index extends Component {
 
   render() {
     const { getAnalyze, zone, loading, groupResult } = this.props;
-    const { tabType } = this.state;
+    const { tabType, myLoading } = this.state;
     const Piedata = [];
     const overPill = [];
     const carr = [];
@@ -376,7 +402,7 @@ class Index extends Component {
         overPill.push({ country: 'Fail', year: v.partStyle, value: v.Fail });
       });
       const passNub = pass / all;
-      const Pass = Math.floor(passNub * 10000);
+      const Pass = (passNub * 10000).toFixed(2);
       const Fail = 10000 - Pass;
       Piedata.push({ item: 'Pass', count: Pass / 10000, nub: pass });
       Piedata.push({ item: 'Fail', count: Fail / 10000, nub: all - pass });
@@ -412,71 +438,52 @@ class Index extends Component {
     }
     return (
       <Card>
+        {myLoading === 1 ? (
+          <div style={{ position: 'absolute', zIndex: 1000, left: '50%', top: '50%' }}>
+            <Spin tip="Loading..." size="large" />
+          </div>
+        ) : null}
         <Form onSubmit={this.handleSearch}>
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
-        <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
+        <Tabs
+          defaultActiveKey="1"
+          onChange={this.handleChangeTab}
+          tabBarExtraContent={
+            <Button onClick={this.handleExport}>
+              <Icon type="upload" /> export
+            </Button>
+          }
+        >
           <TabPane tab="Width" key="1">
-            <Card
-              title="Width"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
+            <Card bordered={false}>
               <Suspense fallback={null}>
                 <OfflineData loading={loading} offlineChartData={tabType === '1' ? carr : []} />
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Height" key="2">
-            <Card
-              title="Height"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSVHigth()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
+            <Card bordered={false}>
               <Suspense fallback={null}>
                 <OfflineData loading={loading} offlineChartData={tabType === '2' ? carr2 : []} />
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Volume" key="3">
-            <Card
-              title="Volume"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleCSVV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
+            <Card bordered={false}>
               <Suspense fallback={null}>
                 <OfflineData loading={loading} offlineChartData={tabType === '3' ? carr1 : []} />
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Pass/Fail" key="4">
-            <Card
-              title="Pass/Fail"
-              bordered={false}
-              extra={
-                <Button onClick={() => this.handleHeGeCSV()}>
-                  <Icon type="upload" /> export
-                </Button>
-              }
-            >
+            <Card bordered={false}>
               <Row>
-                <Col span={12}>
+                <Col span={12} style={{ marginTop: 110 }}>
                   <PieChart data={tabType === '4' ? Piedata : []} />
                 </Col>
-                <Col span={12}>
-                  <OverPillar data={tabType === '4' ? overPill : []} />
+                <Col span={12} style={{ marginTop: 110 }}>
+                  {overPill[0] ? <OverPillar data={tabType === '4' ? overPill : []} /> : null}
                 </Col>
               </Row>
             </Card>
