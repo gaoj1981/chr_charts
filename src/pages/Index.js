@@ -205,6 +205,9 @@ class Index extends Component {
         const { groupResult } = this.props;
         if (!groupResult[0]) {
           message.warning('data not exists');
+          this.setState({
+            myLoading: 0,
+          });
         } else {
           this.getZone(parm);
         }
@@ -222,6 +225,9 @@ class Index extends Component {
         const { zone } = this.props;
         if (!zone[0]) {
           message.warning('data not exists');
+          this.setState({
+            myLoading: 0,
+          });
         } else {
           this.getAnalyze(parmZone);
         }

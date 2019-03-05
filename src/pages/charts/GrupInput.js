@@ -140,7 +140,7 @@ class GrupInput extends PureComponent {
                 rules: [
                   {
                     required: true,
-                    message: 'Mast fill in!',
+                    message: 'required!',
                   },
                   {
                     pattern: /^(\d+)((?:\.\d+)?)$/,
@@ -198,7 +198,7 @@ class GrupInput extends PureComponent {
               ],
             })(
               <InputNumber
-                min={2}
+                min={1}
                 max={1000000}
                 style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
                 placeholder="last"
