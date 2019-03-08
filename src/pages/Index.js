@@ -77,11 +77,15 @@ class Index extends Component {
       );
     });
     children.push(
-      <Col key="searchsclear" span={6} style={{ textAlign: 'center', marginTop: 5 }}>
-        <Button icon="search" type="primary" htmlType="submit">
+      <Col key="searchsclear" span={4} style={{ float: 'right', marginTop: 5 }}>
+        <Button icon="search" type="primary" htmlType="submit" style={{ marginLeft: 30 }}>
           Search
         </Button>
-        <Button style={{ marginLeft: 10 }} onClick={this.handleReset} disabled={myLoading === 1}>
+        <Button
+          style={{ marginLeft: 10, float: 'right' }}
+          onClick={this.handleReset}
+          disabled={myLoading === 1}
+        >
           Clear
         </Button>
       </Col>
@@ -276,9 +280,13 @@ class Index extends Component {
   };
 
   handleCSV = () => {
+    const { form } = this.props;
+    const { getFieldValue } = form;
+    const hosts = getFieldValue('hosts');
+    const partStyle = getFieldValue('lingjian');
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
-    const thisDate = `Width_${this.getTimeFormatter()}.csv`;
+    const thisDate = `${hosts}_${partStyle}_Width_${this.getTimeFormatter()}.csv`;
     if (getAnalyze[0]) {
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].width.maximum},${
@@ -291,10 +299,14 @@ class Index extends Component {
   };
 
   handleCSVHigth = () => {
+    const { form } = this.props;
+    const { getFieldValue } = form;
+    const hosts = getFieldValue('hosts');
+    const partStyle = getFieldValue('lingjian');
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `Height_${this.getTimeFormatter()}.csv`;
+      const thisDate = `${hosts}_${partStyle}_Height_${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.h},${v.H[0]},${v.H[1]},${zone[0].zones[v.z].height.maximum},${
           zone[0].zones[v.z].height.minimum
@@ -306,10 +318,14 @@ class Index extends Component {
   };
 
   handleCSVV = () => {
+    const { form } = this.props;
+    const { getFieldValue } = form;
+    const hosts = getFieldValue('hosts');
+    const partStyle = getFieldValue('lingjian');
     let csvArr = 'avg,3STDEV+,3STDEV-,zone_Max,zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
-      const thisDate = `Volume_${this.getTimeFormatter()}.csv`;
+      const thisDate = `${hosts}_${partStyle}_Volume_${this.getTimeFormatter()}.csv`;
       getAnalyze.forEach(v => {
         csvArr += `\n${v.v},${v.V[0]},${v.V[1]},${zone[0].zones[v.z].volume.maximum},${
           zone[0].zones[v.z].volume.minimum
@@ -321,10 +337,14 @@ class Index extends Component {
   };
 
   handleHeGeCSV = () => {
+    const { form } = this.props;
+    const { getFieldValue } = form;
+    const hosts = getFieldValue('hosts');
+    const partStyle = getFieldValue('lingjian');
     let csvArr = 'name,pass,fail';
     const { groupResult } = this.props;
     if (groupResult[0]) {
-      const thisDate = `Pass_${this.getTimeFormatter()}.csv`;
+      const thisDate = `${hosts}_${partStyle}_Pass_${this.getTimeFormatter()}.csv`;
       groupResult.forEach(v => {
         csvArr += `\n${v.partStyle},${v.Pass},${v.Fail},`;
       });
@@ -454,6 +474,7 @@ class Index extends Component {
         </Form>
         <Tabs
           defaultActiveKey="1"
+          type="card"
           onChange={this.handleChangeTab}
           tabBarExtraContent={
             <Button onClick={this.handleExport}>
@@ -464,21 +485,33 @@ class Index extends Component {
           <TabPane tab="Width" key="1">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={tabType === '1' ? carr : []} />
+                <OfflineData
+                  loading={loading}
+                  type="mm"
+                  offlineChartData={tabType === '1' ? carr : []}
+                />
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Height" key="2">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={tabType === '2' ? carr2 : []} />
+                <OfflineData
+                  loading={loading}
+                  type="mm"
+                  offlineChartData={tabType === '2' ? carr2 : []}
+                />
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Volume" key="3">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData loading={loading} offlineChartData={tabType === '3' ? carr1 : []} />
+                <OfflineData
+                  loading={loading}
+                  type="mm³"
+                  offlineChartData={tabType === '3' ? carr1 : []}
+                />
               </Suspense>
             </Card>
           </TabPane>

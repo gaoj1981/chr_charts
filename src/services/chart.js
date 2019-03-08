@@ -4,6 +4,7 @@ import request from '@/utils/request';
 export async function getLingJian(params) {
   return request(`/api/find.part_style?${stringify(params)}`);
 }
+
 export async function getAnalyze(params) {
   // return request(`/api/analyze?${stringify(params)}`);
   return request('/api/analyze', {

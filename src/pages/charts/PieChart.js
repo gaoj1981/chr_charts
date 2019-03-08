@@ -25,7 +25,7 @@ class pieChart extends React.Component {
     };
     return (
       <div>
-        <Chart height={400} data={dv} scale={cols} forceFit>
+        <Chart height={430} data={dv} scale={cols} forceFit>
           <Coord type="theta" radius={0.75} />
           <Axis name="percent" />
           <Legend />

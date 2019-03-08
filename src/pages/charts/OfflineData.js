@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import styles from './Analysis.less';
 import { TimelineChart } from '@/components/Charts';
 
-const OfflineData = ({ loading, offlineChartData }) => (
+const OfflineData = ({ loading, offlineChartData, type }) => (
   <Card loading={loading} className={styles.offlineCard} bordered={false} style={{ marginTop: 32 }}>
     <div style={{ padding: '0 24px' }}>
       <TimelineChart
@@ -16,6 +16,7 @@ const OfflineData = ({ loading, offlineChartData }) => (
           y4: 'Zone（上限）',
           y5: 'Zone（下限）',
         }}
+        type={type}
       />
     </div>
   </Card>

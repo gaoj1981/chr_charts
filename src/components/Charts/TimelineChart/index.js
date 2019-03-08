@@ -12,6 +12,7 @@ class TimelineChart extends React.Component {
       title,
       height = 400,
       padding = [60, 20, 40, 40],
+      type,
       titleMap = {
         y1: 'y1',
         y2: 'y2',
@@ -112,7 +113,8 @@ class TimelineChart extends React.Component {
       />
     );
     return (
-      <div className={styles.timelineChart} style={{ height: height + 30 }}>
+      <div className={styles.timelineChart} style={{ height: height + 60 }}>
+        <div>{dv.origin.length > 0 ? `计算值(${type})` : null}</div>
         <div>
           {title && <h4>{title}</h4>}
           <Chart height={height} padding={padding} data={dv} scale={cols} forceFit>
@@ -126,6 +128,7 @@ class TimelineChart extends React.Component {
               color={['key', ['#1890FF', '#2FC25B', '#FACC14', '#ccc', '#999']]}
             />
           </Chart>
+          <p style={{ textAlign: 'center' }}>{dv.origin.length > 0 ? '检测帧数' : null}</p>
           <div style={{ marginRight: -20 }}>
             <SliderGen />
           </div>

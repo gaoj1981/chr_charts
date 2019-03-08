@@ -4,14 +4,14 @@ import moment from 'moment';
 
 const InputGroup = Input.Group;
 const { Option } = Select;
-const { RangePicker, MonthPicker } = DatePicker;
+const { RangePicker } = DatePicker;
 const monthFormat = 'YYYY/MM';
 const dayFormat = 'YYYY/MM/DD';
 
 @Form.create()
 class GrupInput extends PureComponent {
   state = {
-    opVal: 'date',
+    opVal: 'Day',
   };
 
   // 获取月份中的日期1
@@ -42,15 +42,9 @@ class GrupInput extends PureComponent {
     const { opVal } = this.state;
     const { getFieldDecorator } = form;
     const now = new Date();
-    const year = now.getFullYear();
-    const day = now.getDate();
-    const month = now.getMonth() + 1;
-    let clock = `${year}-`;
-    if (month < 10) clock += '0';
-    clock += `${month}`;
     const children = [];
     switch (opVal) {
-      case 'date':
+      case 'Date':
         return (
           <InputGroup compact>
             <Select
@@ -63,20 +57,17 @@ class GrupInput extends PureComponent {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option key="1" value="date">
-                date
+              <Option key="1" value="Day">
+                Date
               </Option>
-              <Option key="2" value="scan">
-                scan
+              <Option key="2" value="Date">
+                Date Range
               </Option>
-              <Option key="3" value="last">
-                last
+              <Option key="3" value="Scan">
+                Scan No.
               </Option>
-              <Option key="4" value="day1">
-                day1
-              </Option>
-              <Option key="5" value="day2">
-                day2
+              <Option key="4" value="Last">
+                Last
               </Option>
             </Select>
             {getFieldDecorator('days', {
@@ -89,7 +80,7 @@ class GrupInput extends PureComponent {
             })(<RangePicker placeholder={['Start Time', 'End Time']} style={{ width: '70%' }} />)}
           </InputGroup>
         );
-      case 'scan':
+      case 'Scan':
         return (
           <InputGroup compact>
             <Select
@@ -102,20 +93,17 @@ class GrupInput extends PureComponent {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option key="1" value="date">
-                date
+              <Option key="1" value="Day">
+                Date
               </Option>
-              <Option key="2" value="scan">
-                scan
+              <Option key="2" value="Date">
+                Date Range
               </Option>
-              <Option key="3" value="last">
-                last
+              <Option key="3" value="Scan">
+                Scan No.
               </Option>
-              <Option key="4" value="day1">
-                day1
-              </Option>
-              <Option key="5" value="day2">
-                day2
+              <Option key="4" value="Last">
+                Last
               </Option>
             </Select>
             <span style={{ width: '70%' }}>
@@ -156,7 +144,7 @@ class GrupInput extends PureComponent {
             </span>
           </InputGroup>
         );
-      case 'last':
+      case 'Last':
         return (
           <InputGroup compact>
             <Select
@@ -169,20 +157,17 @@ class GrupInput extends PureComponent {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option key="1" value="date">
-                date
+              <Option key="1" value="Day">
+                Date
               </Option>
-              <Option key="2" value="scan">
-                scan
+              <Option key="2" value="Date">
+                Date Range
               </Option>
-              <Option key="3" value="last">
-                last
+              <Option key="3" value="Scan">
+                Scan No.
               </Option>
-              <Option key="4" value="day1">
-                day1
-              </Option>
-              <Option key="5" value="day2">
-                day2
+              <Option key="4" value="Last">
+                Last
               </Option>
             </Select>
             {getFieldDecorator('lastimum', {
@@ -206,7 +191,7 @@ class GrupInput extends PureComponent {
             )}
           </InputGroup>
         );
-      case 'day1':
+      case 'Day':
         return (
           <InputGroup compact>
             <Select
@@ -219,71 +204,17 @@ class GrupInput extends PureComponent {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Option key="1" value="date">
-                date
+              <Option key="1" value="Day">
+                Date
               </Option>
-              <Option key="2" value="scan">
-                scan
+              <Option key="2" value="Date">
+                Date Range
               </Option>
-              <Option key="3" value="last">
-                last
+              <Option key="3" value="Scan">
+                Scan No.
               </Option>
-              <Option key="4" value="day1">
-                day1
-              </Option>
-              <Option key="5" value="day2">
-                day2
-              </Option>
-            </Select>
-            <span style={{ width: '70%' }}>
-              {getFieldDecorator('month', {
-                initialValue: moment(clock, monthFormat) || '',
-                rules: [
-                  {
-                    required: true,
-                    message: 'required!',
-                  },
-                ],
-              })(<MonthPicker style={{ width: '50%' }} format={monthFormat} />)}
-              {getFieldDecorator('mayDay', {
-                initialValue: day || '',
-                rules: [
-                  {
-                    required: true,
-                    message: 'required!',
-                  },
-                ],
-              })(<Select style={{ width: '50%' }}>{this.getDay()}</Select>)}
-            </span>
-          </InputGroup>
-        );
-      case 'day2':
-        return (
-          <InputGroup compact>
-            <Select
-              showSearch
-              style={{ width: '30%' }}
-              value={opVal}
-              optionFilterProp="children"
-              onChange={this.handleOption}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option key="1" value="date">
-                date
-              </Option>
-              <Option key="2" value="scan">
-                scan
-              </Option>
-              <Option key="3" value="last">
-                last
-              </Option>
-              <Option key="4" value="day1">
-                day1
-              </Option>
-              <Option key="5" value="day2">
-                day2
+              <Option key="4" value="Last">
+                Last
               </Option>
             </Select>
             <span style={{ width: '70%' }}>
