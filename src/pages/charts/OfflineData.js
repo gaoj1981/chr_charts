@@ -10,11 +10,11 @@ const OfflineData = ({ loading, offlineChartData, type }) => (
         height={400}
         data={offlineChartData}
         titleMap={{
-          y1: '平均值 ',
-          y2: '标准差（上限） ',
-          y3: '标准差（下限）',
-          y4: 'Zone（上限）',
-          y5: 'Zone（下限）',
+          y1: 'Mean ',
+          y2: 'Standard Dev（Max）',
+          y3: 'Standard Dev（Min）',
+          y4: 'Zone（Max）',
+          y5: 'Zone（Min）',
         }}
         type={type}
       />

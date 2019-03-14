@@ -114,21 +114,49 @@ class TimelineChart extends React.Component {
     );
     return (
       <div className={styles.timelineChart} style={{ height: height + 60 }}>
-        <div>{dv.origin.length > 0 ? `计算值(${type})` : null}</div>
+        <div>{dv.origin.length > 0 ? `Value(${type})` : null}</div>
         <div>
           {title && <h4>{title}</h4>}
           <Chart height={height} padding={padding} data={dv} scale={cols} forceFit>
             <Axis name="x" />
-            <Tooltip />
-            <Legend name="key" position="top" />
+            <Tooltip
+              offset={80}
+              containerTpl='<div class="g2-tooltip"><p class="g2-tooltip-title"></p><table class="g2-tooltip-list"></table></div>'
+              itemTpl='<tr class="g2-tooltip-list-item"><td style="color:{color}">{name}</td><td>{value}</td></tr>'
+              g2-tooltip={{
+                position: 'absolute',
+                visibility: 'hidden',
+                border: '1px solid #efefef',
+                backgroundColor: 'white',
+                color: '#000',
+                opacity: '0.8',
+                transition: 'top 400ms,left 300ms',
+                padding: '5px 25px',
+                width: '25%',
+              }}
+              g2-tooltip-list={{
+                margin: '10px',
+              }}
+            />
             <Geom
               type="line"
               position="x*value"
               size={['key', [2, 2, 2, 1, 1]]}
-              color={['key', ['#1890FF', '#2FC25B', '#FACC14', '#ccc', '#999']]}
+              color={['key', ['#1890FF', '#2FC25B', '#FACC14', '#888', '#666']]}
+            />
+            <Legend
+              name="key"
+              position="top"
+              useHtml
+              itemTpl={
+                '<li class="g2-legend-list-item item-{index} {checked}" data-color="{originColor}" data-value="{originValue}" style="cursor: pointer;font-size: 14px;height: 40px;">' +
+                '<button><i class="g2-legend-marker" style="width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:10px;background-color: {color};"></i>' +
+                '<span class="g2-legend-text">{value}</span></button>' +
+                '</li>'
+              }
             />
           </Chart>
-          <p style={{ textAlign: 'center' }}>{dv.origin.length > 0 ? '检测帧数' : null}</p>
+          <p style={{ textAlign: 'center' }}>{dv.origin.length > 0 ? 'Scan Frame' : null}</p>
           <div style={{ marginRight: -20 }}>
             <SliderGen />
           </div>

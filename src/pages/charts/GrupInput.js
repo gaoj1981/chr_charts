@@ -77,7 +77,14 @@ class GrupInput extends PureComponent {
                   message: 'required!',
                 },
               ],
-            })(<RangePicker placeholder={['Start Time', 'End Time']} style={{ width: '70%' }} />)}
+            })(
+              <RangePicker
+                showTime={{ format: 'HH:mm' }}
+                format="YYYY-MM-DD HH:mm"
+                placeholder={['Start Time', 'End Time']}
+                style={{ width: '70%' }}
+              />
+            )}
           </InputGroup>
         );
       case 'Scan':

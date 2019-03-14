@@ -6,6 +6,7 @@ import moment from 'moment';
 import PieChart from './charts/PieChart';
 import OverPillar from './charts/OverPillar';
 import GrupInput from './charts/GrupInput';
+// import { formatMessage, setLocale, getLocale } from 'umi/locale';
 
 const OfflineData = React.lazy(() => import('./charts/OfflineData'));
 const monthFormat = 'YYYY-MM';
@@ -77,16 +78,18 @@ class Index extends Component {
       );
     });
     children.push(
-      <Col key="searchsclear" span={4} style={{ float: 'right', marginTop: 5 }}>
-        <Button icon="search" type="primary" htmlType="submit" style={{ marginLeft: 30 }}>
-          Search
+      <Col key="searchsclear" span={5} style={{ marginTop: 5, float: 'right' }}>
+        <Button style={{ float: 'right' }} onClick={this.handleReset} disabled={myLoading === 1}>
+          <Icon type="sync" />
+          Clear
         </Button>
         <Button
-          style={{ marginLeft: 10, float: 'right' }}
-          onClick={this.handleReset}
-          disabled={myLoading === 1}
+          icon="search"
+          type="primary"
+          htmlType="submit"
+          style={{ float: 'right', marginRight: 10 }}
         >
-          Clear
+          Search
         </Button>
       </Col>
     );
@@ -162,8 +165,8 @@ class Index extends Component {
       const parm = {
         hosts: [values.hosts],
         partStyle: values.lingjian,
-        start: values.days ? `${values.days[0].format('YYYY-MM-DD')} 00:00:00` : null,
-        end: values.days ? `${values.days[1].format('YYYY-MM-DD')} 23:59:59` : null,
+        start: values.days ? `${values.days[0].format('YYYY-MM-DD HH:mm')}:00` : null,
+        end: values.days ? `${values.days[1].format('YYYY-MM-DD HH:mm')}:59` : null,
         scanScope: values.Minimum ? [Number(values.Minimum), Number(values.Maximum)] : null,
         limit: values.lastimum || null,
       };
@@ -262,6 +265,7 @@ class Index extends Component {
     const { resetFields } = form;
     resetFields();
     this.cleanDate();
+    this.getHost();
   };
 
   handleHost = value => {
@@ -438,8 +442,8 @@ class Index extends Component {
           y1: v.w,
           y2: v.W[0],
           y3: v.W[1],
-          y4: zone[0].zones[v.z].width.maximum,
-          y5: zone[0].zones[v.z].width.minimum,
+          y4: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].width.maximum,
+          y5: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].width.minimum,
         };
         carr.push(aar);
         const aar1 = {
@@ -447,8 +451,10 @@ class Index extends Component {
           y1: v.v,
           y2: v.V[0],
           y3: v.V[1],
-          y4: zone[0].zones[v.z].volume.maximum,
-          y5: zone[0].zones[v.z].volume.minimum,
+          y4: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].volume.maximum,
+          y5: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].volume.minimum,
+          // y4: zone[0].zones[v.z].volume.maximum,
+          // y5: zone[0].zones[v.z].volume.minimum,
         };
         carr1.push(aar1);
         const aar2 = {
@@ -456,8 +462,10 @@ class Index extends Component {
           y1: v.h,
           y2: v.H[0],
           y3: v.H[1],
-          y4: zone[0].zones[v.z].height.maximum,
-          y5: zone[0].zones[v.z].height.minimum,
+          y4: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].height.maximum,
+          y5: zone[0].zones[v.z] === undefined ? 0 : zone[0].zones[v.z].height.minimum,
+          // y4: zone[0].zones[v.z].height.maximum,
+          // y5: zone[0].zones[v.z].height.minimum,
         };
         carr2.push(aar2);
       });
@@ -485,33 +493,27 @@ class Index extends Component {
           <TabPane tab="Width" key="1">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData
-                  loading={loading}
-                  type="mm"
-                  offlineChartData={tabType === '1' ? carr : []}
-                />
+                {tabType === '1' ? (
+                  <OfflineData loading={loading} type="mm" offlineChartData={carr} />
+                ) : null}
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Height" key="2">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData
-                  loading={loading}
-                  type="mm"
-                  offlineChartData={tabType === '2' ? carr2 : []}
-                />
+                {tabType === '2' ? (
+                  <OfflineData loading={loading} type="mm" offlineChartData={carr2} />
+                ) : null}
               </Suspense>
             </Card>
           </TabPane>
           <TabPane tab="Volume" key="3">
             <Card bordered={false}>
               <Suspense fallback={null}>
-                <OfflineData
-                  loading={loading}
-                  type="mm³"
-                  offlineChartData={tabType === '3' ? carr1 : []}
-                />
+                {tabType === '3' ? (
+                  <OfflineData loading={loading} type="mm³" offlineChartData={carr1} />
+                ) : null}
               </Suspense>
             </Card>
           </TabPane>
@@ -519,10 +521,10 @@ class Index extends Component {
             <Card bordered={false}>
               <Row>
                 <Col span={12} style={{ marginTop: 110 }}>
-                  <PieChart data={tabType === '4' ? Piedata : []} />
+                  {tabType === '4' ? <PieChart data={Piedata} /> : null}
                 </Col>
                 <Col span={12} style={{ marginTop: 110 }}>
-                  {overPill[0] ? <OverPillar data={tabType === '4' ? overPill : []} /> : null}
+                  {tabType === '4' ? <OverPillar data={overPill} /> : null}
                 </Col>
               </Row>
             </Card>
