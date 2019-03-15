@@ -1,10 +1,13 @@
 import React from 'react';
+import { formatMessage } from 'umi/locale';
 import { Chart, Tooltip, Geom, Legend, Axis } from 'bizcharts';
 import DataSet from '@antv/data-set';
 import Slider from 'bizcharts-plugin-slider';
 import autoHeight from '../autoHeight';
 import styles from './index.less';
 
+const frame = formatMessage({ id: 'Scan Frame' });
+const myValue = formatMessage({ id: 'Value' });
 @autoHeight()
 class TimelineChart extends React.Component {
   render() {
@@ -114,7 +117,7 @@ class TimelineChart extends React.Component {
     );
     return (
       <div className={styles.timelineChart} style={{ height: height + 60 }}>
-        <div>{dv.origin.length > 0 ? `Value(${type})` : null}</div>
+        <div>{dv.origin.length > 0 ? `${myValue}(${type})` : null}</div>
         <div>
           {title && <h4>{title}</h4>}
           <Chart height={height} padding={padding} data={dv} scale={cols} forceFit>
@@ -156,7 +159,7 @@ class TimelineChart extends React.Component {
               }
             />
           </Chart>
-          <p style={{ textAlign: 'center' }}>{dv.origin.length > 0 ? 'Scan Frame' : null}</p>
+          <p style={{ textAlign: 'center' }}>{dv.origin.length > 0 ? `${frame}` : null}</p>
           <div style={{ marginRight: -20 }}>
             <SliderGen />
           </div>

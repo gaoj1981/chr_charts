@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { FormattedMessage } from 'umi/locale';
 import { Input, Select, DatePicker, Form, InputNumber } from 'antd';
 import moment from 'moment';
 
@@ -58,16 +59,16 @@ class GrupInput extends PureComponent {
               }
             >
               <Option key="1" value="Day">
-                Date
+                <FormattedMessage id="Date" />
               </Option>
               <Option key="2" value="Date">
-                Date Range
+                <FormattedMessage id="Date Range" />
               </Option>
               <Option key="3" value="Scan">
-                Scan No.
+                <FormattedMessage id="Scan No." />
               </Option>
               <Option key="4" value="Last">
-                Last
+                <FormattedMessage id="Last" />
               </Option>
             </Select>
             {getFieldDecorator('days', {
@@ -101,16 +102,16 @@ class GrupInput extends PureComponent {
               }
             >
               <Option key="1" value="Day">
-                Date
+                <FormattedMessage id="Date" />
               </Option>
               <Option key="2" value="Date">
-                Date Range
+                <FormattedMessage id="Date Range" />
               </Option>
               <Option key="3" value="Scan">
-                Scan No.
+                <FormattedMessage id="Scan No." />
               </Option>
               <Option key="4" value="Last">
-                Last
+                <FormattedMessage id="Last" />
               </Option>
             </Select>
             <span style={{ width: '70%' }}>
@@ -165,16 +166,16 @@ class GrupInput extends PureComponent {
               }
             >
               <Option key="1" value="Day">
-                Date
+                <FormattedMessage id="Date" />
               </Option>
               <Option key="2" value="Date">
-                Date Range
+                <FormattedMessage id="Date Range" />
               </Option>
               <Option key="3" value="Scan">
-                Scan No.
+                <FormattedMessage id="Scan No." />
               </Option>
               <Option key="4" value="Last">
-                Last
+                <FormattedMessage id="Last" />
               </Option>
             </Select>
             {getFieldDecorator('lastimum', {
@@ -212,16 +213,16 @@ class GrupInput extends PureComponent {
               }
             >
               <Option key="1" value="Day">
-                Date
+                <FormattedMessage id="Date" />
               </Option>
               <Option key="2" value="Date">
-                Date Range
+                <FormattedMessage id="Date Range" />
               </Option>
               <Option key="3" value="Scan">
-                Scan No.
+                <FormattedMessage id="Scan No." />
               </Option>
               <Option key="4" value="Last">
-                Last
+                <FormattedMessage id="Last" />
               </Option>
             </Select>
             <span style={{ width: '70%' }}>

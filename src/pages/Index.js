@@ -1,17 +1,35 @@
 import React, { Component, Suspense } from 'react';
+import { formatMessage, FormattedMessage, setLocale } from 'umi/locale';
 import { connect } from 'dva';
 import { saveAs } from 'file-saver';
-import { Form, Row, Col, Button, Select, Card, message, InputNumber, Icon, Tabs, Spin } from 'antd';
+import {
+  Form,
+  Row,
+  Col,
+  Button,
+  Select,
+  Card,
+  message,
+  InputNumber,
+  Icon,
+  Tabs,
+  Spin,
+  Statistic,
+} from 'antd';
 import moment from 'moment';
 import PieChart from './charts/PieChart';
 import OverPillar from './charts/OverPillar';
 import GrupInput from './charts/GrupInput';
-// import { formatMessage, setLocale, getLocale } from 'umi/locale';
 
 const OfflineData = React.lazy(() => import('./charts/OfflineData'));
 const monthFormat = 'YYYY-MM';
 const { Option } = Select;
 const { TabPane } = Tabs;
+const exists = formatMessage({ id: 'data not exists' });
+const myWidth = formatMessage({ id: 'Width' });
+const myHeight = formatMessage({ id: 'Height' });
+const myVolume = formatMessage({ id: 'Volume' });
+const myPass = formatMessage({ id: 'Pass/Fail' });
 
 @Form.create()
 @connect(({ charts }) => ({
@@ -19,6 +37,7 @@ const { TabPane } = Tabs;
   getAnalyze: charts.getAnalyze,
   groupResult: charts.groupResult,
   getHost: charts.getHost,
+  summaryResult: charts.summaryResult,
   zone: charts.zone,
 }))
 class Index extends Component {
@@ -30,6 +49,7 @@ class Index extends Component {
 
   componentDidMount() {
     this.getHost();
+    setLocale('en-US');
   }
 
   getHost = () => {
@@ -81,15 +101,16 @@ class Index extends Component {
       <Col key="searchsclear" span={5} style={{ marginTop: 5, float: 'right' }}>
         <Button style={{ float: 'right' }} onClick={this.handleReset} disabled={myLoading === 1}>
           <Icon type="sync" />
-          Clear
+          <FormattedMessage id="Clear" />
         </Button>
         <Button
           icon="search"
           type="primary"
           htmlType="submit"
           style={{ float: 'right', marginRight: 10 }}
+          loading={myLoading === 1}
         >
-          Search
+          <FormattedMessage id="Search" />
         </Button>
       </Col>
     );
@@ -143,10 +164,10 @@ class Index extends Component {
       const { getHost } = this.props;
       const set = new Set(getHost);
       if (set) {
-        set.forEach((v, i) => {
+        set.forEach(v => {
           optionData.push(
-            <Option value={i} key={v}>
-              {v}
+            <Option value={v.split(':')[0] || v} key={v}>
+              {v.split(':')[1] || v}
             </Option>
           );
         });
@@ -181,6 +202,7 @@ class Index extends Component {
         parm.end = `${values.monthDay.format('YYYY-MM-DD')} 23:59:59`;
       }
       this.getGroupResult(parm);
+      this.summaryResult(parm);
     });
   };
 
@@ -211,7 +233,7 @@ class Index extends Component {
       callback: () => {
         const { groupResult } = this.props;
         if (!groupResult[0]) {
-          message.warning('data not exists');
+          message.warning(`${exists}`);
           this.setState({
             myLoading: 0,
           });
@@ -231,7 +253,7 @@ class Index extends Component {
       callback: () => {
         const { zone } = this.props;
         if (!zone[0]) {
-          message.warning('data not exists');
+          message.warning(`${exists}`);
           this.setState({
             myLoading: 0,
           });
@@ -251,12 +273,21 @@ class Index extends Component {
       callback: () => {
         const { getAnalyze } = this.props;
         if (!getAnalyze[0]) {
-          message.warning('data not exists');
+          message.warning(`${exists}`);
         }
         this.setState({
           myLoading: 0,
         });
       },
+    });
+  };
+
+  summaryResult = parm => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'charts/reqCommon',
+      service: 'summaryResult',
+      payload: parm,
     });
   };
 
@@ -415,7 +446,7 @@ class Index extends Component {
   }
 
   render() {
-    const { getAnalyze, zone, loading, groupResult } = this.props;
+    const { getAnalyze, zone, loading, groupResult, summaryResult } = this.props;
     const { tabType, myLoading } = this.state;
     const Piedata = [];
     const overPill = [];
@@ -470,6 +501,8 @@ class Index extends Component {
         carr2.push(aar2);
       });
     }
+    console.log(summaryResult);
+    const { pass, fail, maxScan, minScan, minDate, maxDate, total } = summaryResult;
     return (
       <Card>
         {myLoading === 1 ? (
@@ -480,17 +513,77 @@ class Index extends Component {
         <Form onSubmit={this.handleSearch}>
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
+        <div style={{ background: '#ECECEC', padding: '10px', marginBottom: '18px' }}>
+          <Row gutter={16}>
+            <Col span={2}>
+              <Card size="small">
+                <Statistic title="total" valueStyle={{ fontSize: '18px' }} value={total} />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="pass"
+                  value={pass}
+                  suffix={<Icon type="check" />}
+                  valueStyle={{ color: 'green', fontSize: '18px' }}
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="fail"
+                  value={fail}
+                  suffix={<Icon type="close" />}
+                  valueStyle={{ color: 'red', fontSize: '18px' }}
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="Scan(min)"
+                  valueStyle={{ fontSize: '18px' }}
+                  value={minScan}
+                  groupSeparator=""
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="Scan(max)"
+                  valueStyle={{ fontSize: '18px' }}
+                  value={maxScan}
+                  groupSeparator=""
+                />
+              </Card>
+            </Col>
+            <Col span={5}>
+              <Card size="small">
+                <Statistic title="Date(min)" valueStyle={{ fontSize: '18px' }} value={minDate} />
+              </Card>
+            </Col>
+            <Col span={5}>
+              <Card size="small">
+                <Statistic title="Date(max)" valueStyle={{ fontSize: '18px' }} value={maxDate} />
+              </Card>
+            </Col>
+          </Row>
+        </div>
         <Tabs
           defaultActiveKey="1"
           type="card"
           onChange={this.handleChangeTab}
           tabBarExtraContent={
             <Button onClick={this.handleExport}>
-              <Icon type="upload" /> export
+              <Icon type="upload" />
+              <FormattedMessage id="export" />
             </Button>
           }
         >
-          <TabPane tab="Width" key="1">
+          <TabPane tab={myWidth} key="1">
             <Card bordered={false}>
               <Suspense fallback={null}>
                 {tabType === '1' ? (
@@ -499,7 +592,7 @@ class Index extends Component {
               </Suspense>
             </Card>
           </TabPane>
-          <TabPane tab="Height" key="2">
+          <TabPane tab={myHeight} key="2">
             <Card bordered={false}>
               <Suspense fallback={null}>
                 {tabType === '2' ? (
@@ -508,7 +601,7 @@ class Index extends Component {
               </Suspense>
             </Card>
           </TabPane>
-          <TabPane tab="Volume" key="3">
+          <TabPane tab={myVolume} key="3">
             <Card bordered={false}>
               <Suspense fallback={null}>
                 {tabType === '3' ? (
@@ -517,7 +610,7 @@ class Index extends Component {
               </Suspense>
             </Card>
           </TabPane>
-          <TabPane tab="Pass/Fail" key="4">
+          <TabPane tab={myPass} key="4">
             <Card bordered={false}>
               <Row>
                 <Col span={12} style={{ marginTop: 110 }}>

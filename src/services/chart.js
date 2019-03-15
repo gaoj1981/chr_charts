@@ -32,3 +32,10 @@ export async function getGroupResult(params) {
 export async function getHost(params) {
   return request(`/api/find.host?${stringify(params)}`);
 }
+
+export async function summaryResult(params) {
+  return request('/api/summary_result', {
+    method: 'POST',
+    body: params,
+  });
+}

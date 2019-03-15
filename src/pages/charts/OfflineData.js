@@ -1,7 +1,13 @@
 import React from 'react';
+import { formatMessage } from 'umi/locale';
 import { Card } from 'antd';
 import styles from './Analysis.less';
 import { TimelineChart } from '@/components/Charts';
+
+const mean = formatMessage({ id: 'Mean' });
+const standard = formatMessage({ id: 'Standard Dev' });
+const max = formatMessage({ id: 'Max' });
+const min = formatMessage({ id: 'Min' });
 
 const OfflineData = ({ loading, offlineChartData, type }) => (
   <Card loading={loading} className={styles.offlineCard} bordered={false} style={{ marginTop: 32 }}>
@@ -10,11 +16,11 @@ const OfflineData = ({ loading, offlineChartData, type }) => (
         height={400}
         data={offlineChartData}
         titleMap={{
-          y1: 'Mean ',
-          y2: 'Standard Dev（Max）',
-          y3: 'Standard Dev（Min）',
-          y4: 'Zone（Max）',
-          y5: 'Zone（Min）',
+          y1: `${mean}`,
+          y2: `${standard}（${max}）`,
+          y3: `${standard}（${min}）`,
+          y4: `Zone（${max}）`,
+          y5: `Zone（${min}）`,
         }}
         type={type}
       />

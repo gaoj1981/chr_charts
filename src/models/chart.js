@@ -1,5 +1,12 @@
 import { isResOK } from '@/utils/BizUtil';
-import { getLingJian, getZone, getAnalyze, getGroupResult, getHost } from '@/services/chart';
+import {
+  getLingJian,
+  getZone,
+  getAnalyze,
+  getGroupResult,
+  getHost,
+  summaryResult,
+} from '@/services/chart';
 
 const servToReduce = {
   getLingJian: { method: getLingJian, reduce: 'getLingJian' },
@@ -7,6 +14,7 @@ const servToReduce = {
   getAnalyze: { method: getAnalyze, reduce: 'getAnalyze' },
   getGroupResult: { method: getGroupResult, reduce: 'getGroupResult' },
   getHost: { method: getHost, reduce: 'getHost' },
+  summaryResult: { method: summaryResult, reduce: 'summaryResult' },
 };
 
 //
@@ -19,6 +27,7 @@ export default {
     zone: {},
     groupResult: {},
     getHost: [],
+    summaryResult: [],
   },
 
   effects: {
@@ -70,6 +79,12 @@ export default {
         groupResult: action.payload,
       };
     },
+    summaryResult(state, action) {
+      return {
+        ...state,
+        summaryResult: action.payload,
+      };
+    },
 
     // 清空编辑state
     cleanEditState(state, action) {
@@ -78,6 +93,7 @@ export default {
         zone: action.payload,
         getAnalyze: action.payload,
         groupResult: action.payload,
+        summaryResult: action.payload,
       };
     },
   },
