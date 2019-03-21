@@ -122,7 +122,11 @@ class Index extends Component {
     let children = null;
     switch (index) {
       case 0:
-        children = <Select onChange={this.handleHost}>{this.fileOption(0)}</Select>;
+        children = (
+          <Select onFocus={this.handleFocuse} onChange={this.handleHost}>
+            {this.fileOption(0)}
+          </Select>
+        );
         break;
       case 1:
         children = <Select onChange={this.handleStyle}>{this.fileOption(1)}</Select>;
@@ -202,7 +206,6 @@ class Index extends Component {
         parm.end = `${values.monthDay.format('YYYY-MM-DD')} 23:59:59`;
       }
       this.getGroupResult(parm);
-      this.summaryResult(parm);
     });
   };
 
@@ -275,6 +278,7 @@ class Index extends Component {
         if (!getAnalyze[0]) {
           message.warning(`${exists}`);
         }
+        this.summaryResult(parm);
         this.setState({
           myLoading: 0,
         });
@@ -308,6 +312,10 @@ class Index extends Component {
       service: 'getLingJian',
       payload: hosts,
     });
+  };
+
+  handleFocuse = () => {
+    this.getHost();
   };
 
   handleStyle = () => {
@@ -515,37 +523,39 @@ class Index extends Component {
         </Form>
         <div style={{ background: '#ECECEC', padding: '10px', marginBottom: '18px' }}>
           <Row gutter={16}>
-            <Col span={2}>
-              <Card size="small">
-                <Statistic title="total" valueStyle={{ fontSize: '18px' }} value={total} />
-              </Card>
-            </Col>
-            <Col span={3}>
+            <Col span={4}>
               <Card size="small">
                 <Statistic
-                  title="pass"
-                  value={pass}
-                  suffix={<Icon type="check" />}
-                  valueStyle={{ color: 'green', fontSize: '18px' }}
-                />
-              </Card>
-            </Col>
-            <Col span={3}>
-              <Card size="small">
-                <Statistic
-                  title="fail"
-                  value={fail}
-                  suffix={<Icon type="close" />}
-                  valueStyle={{ color: 'red', fontSize: '18px' }}
-                />
-              </Card>
-            </Col>
-            <Col span={3}>
-              <Card size="small">
-                <Statistic
-                  title="Scan(min)"
+                  title="Total"
                   valueStyle={{ fontSize: '18px' }}
-                  value={minScan}
+                  value={total >= 0 ? total : '--'}
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="Pass"
+                  value={pass >= 0 ? pass : '--'}
+                  valueStyle={{ fontSize: '18px', color: 'green' }}
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="Fail"
+                  value={fail >= 0 ? fail : '--'}
+                  valueStyle={{ fontSize: '18px', color: 'red' }}
+                />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card size="small">
+                <Statistic
+                  title="Scan No.(min)"
+                  valueStyle={{ fontSize: '18px' }}
+                  value={minScan || '--'}
                   groupSeparator=""
                 />
               </Card>
@@ -553,21 +563,29 @@ class Index extends Component {
             <Col span={3}>
               <Card size="small">
                 <Statistic
-                  title="Scan(max)"
+                  title="Scan No.(max)"
                   valueStyle={{ fontSize: '18px' }}
-                  value={maxScan}
+                  value={maxScan || '--'}
                   groupSeparator=""
                 />
               </Card>
             </Col>
-            <Col span={5}>
+            <Col span={4}>
               <Card size="small">
-                <Statistic title="Date(min)" valueStyle={{ fontSize: '18px' }} value={minDate} />
+                <Statistic
+                  title="Date(min)"
+                  valueStyle={{ fontSize: '18px' }}
+                  value={minDate ? moment(minDate).format('YYYY-MM-DD HH:mm') : '--'}
+                />
               </Card>
             </Col>
-            <Col span={5}>
+            <Col span={4}>
               <Card size="small">
-                <Statistic title="Date(max)" valueStyle={{ fontSize: '18px' }} value={maxDate} />
+                <Statistic
+                  title="Date(max)"
+                  valueStyle={{ fontSize: '18px' }}
+                  value={maxDate ? moment(maxDate).format('YYYY-MM-DD HH:mm') : '--'}
+                />
               </Card>
             </Col>
           </Row>
