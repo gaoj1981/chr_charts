@@ -59,7 +59,7 @@ export default {
   month: '月',
   cancel: '取消',
   fail: '失败',
-  duplication: '同名',
+  duplicate: '同名',
   width: '宽',
   height: '高',
   volume: '体积',

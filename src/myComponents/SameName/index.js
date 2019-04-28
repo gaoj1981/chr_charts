@@ -151,6 +151,21 @@ class SameName extends PureComponent {
           onClose={this.childrenClose}
           visible={cv}
         >
+          <div
+            style={{
+              position: 'absolute',
+              top: '45%',
+              right: -15,
+              display: visible ? 'block' : 'none',
+            }}
+          >
+            <Button
+              icon="double-left"
+              type="default"
+              style={{ height: 50, width: 18, padding: 0, border: 0, color: '#40a9ff' }}
+              onClick={this.childrenClose}
+            />
+          </div>
           {cv ? this.childrenForm(items) : null}
         </Drawer>
       </Drawer>

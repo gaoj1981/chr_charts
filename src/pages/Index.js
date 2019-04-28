@@ -36,7 +36,7 @@ const myWidth = formatMessage({ id: 'Width' });
 const myHeight = formatMessage({ id: 'Height' });
 const myVolume = formatMessage({ id: 'Volume' });
 const myPass = formatMessage({ id: 'Pass/Fail' });
-const duplication = formatMessage({ id: 'duplication' });
+const duplication = formatMessage({ id: 'duplicate' });
 const Total = formatMessage({ id: 'Total' });
 const myNaPass = formatMessage({ id: 'Pass' });
 const myFail = formatMessage({ id: 'fail' });
@@ -400,7 +400,7 @@ class Index extends Component {
     const { getFieldValue } = form;
     const hosts = getFieldValue('hosts');
     const partStyle = getFieldValue('lingjian');
-    let csvArr = 'avg,STDEV_Max_3,STDEV_Min_3,zone_Max,zone_Min';
+    let csvArr = 'Ave,STDEV_Max_3,STDEV_Min_3,Zone_Max,Zone_Min';
     const { getAnalyze, zone } = this.props;
     const thisDate = `${hosts}_${partStyle}_Width_${this.getTimeFormatter()}.csv`;
     if (getAnalyze[0]) {
@@ -426,7 +426,7 @@ class Index extends Component {
       getAnalyze.forEach(v => {
         const pa = [];
         const padObj0 = {
-          avg: v.w,
+          Ave: v.w,
         };
         const padObj1 = {
           STDEV_Max_3: v.W[0],
@@ -435,10 +435,10 @@ class Index extends Component {
           STDEV_Min_3: v.W[1],
         };
         const padObj3 = {
-          zone_Max: zone[0].zones[v.z].width.maximum,
+          Zone_Max: zone[0].zones[v.z].width.maximum,
         };
         const padObj4 = {
-          zone_Min: zone[0].zones[v.z].width.minimum,
+          Zone_Min: zone[0].zones[v.z].width.minimum,
         };
         pa.push(padObj0, padObj1, padObj2, padObj3, padObj4);
         const data = { data: pa };
@@ -464,7 +464,7 @@ class Index extends Component {
       getAnalyze.forEach(v => {
         const pa = [];
         const padObj0 = {
-          avg: v.h,
+          Ave: v.h,
         };
         const padObj1 = {
           STDEV_Max_3: v.H[0],
@@ -473,10 +473,10 @@ class Index extends Component {
           STDEV_Min_3: v.H[1],
         };
         const padObj3 = {
-          zone_Max: zone[0].zones[v.z].height.maximum,
+          Zone_Max: zone[0].zones[v.z].height.maximum,
         };
         const padObj4 = {
-          zone_Min: zone[0].zones[v.z].height.minimum,
+          Zone_Min: zone[0].zones[v.z].height.minimum,
         };
         pa.push(padObj0, padObj1, padObj2, padObj3, padObj4);
         const data = { data: pa };
@@ -502,7 +502,7 @@ class Index extends Component {
       getAnalyze.forEach(v => {
         const pa = [];
         const padObj0 = {
-          avg: v.v,
+          Ave: v.v,
         };
         const padObj1 = {
           STDEV_Max_3: v.V[0],
@@ -511,10 +511,10 @@ class Index extends Component {
           STDEV_Min_3: v.V[1],
         };
         const padObj3 = {
-          zone_Max: zone[0].zones[v.z].volume.maximum,
+          Zone_Max: zone[0].zones[v.z].volume.maximum,
         };
         const padObj4 = {
-          zone_Min: zone[0].zones[v.z].volume.minimum,
+          Zone_Min: zone[0].zones[v.z].volume.minimum,
         };
         pa.push(padObj0, padObj1, padObj2, padObj3, padObj4);
         const data = { data: pa };
@@ -533,7 +533,7 @@ class Index extends Component {
     const { getFieldValue } = form;
     const hosts = getFieldValue('hosts');
     const partStyle = getFieldValue('lingjian');
-    let csvArr = 'avg,STDEV_Max_3,STDEV_Min_3,zone_Max,zone_Min';
+    let csvArr = 'Ave,STDEV_Max_3,STDEV_Min_3,Zone_Max,Zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
       const thisDate = `${hosts}_${partStyle}_Height_${this.getTimeFormatter()}.csv`;
@@ -552,7 +552,7 @@ class Index extends Component {
     const { getFieldValue } = form;
     const hosts = getFieldValue('hosts');
     const partStyle = getFieldValue('lingjian');
-    let csvArr = 'avg,STDEV_Max_3,STDEV_Min_3,zone_Max,zone_Min';
+    let csvArr = 'Ave,STDEV_Max_3,STDEV_Min_3,Zone_Max,Zone_Min';
     const { getAnalyze, zone } = this.props;
     if (getAnalyze[0]) {
       const thisDate = `${hosts}_${partStyle}_Volume_${this.getTimeFormatter()}.csv`;
@@ -835,6 +835,7 @@ class Index extends Component {
                               }
                             : null
                         }
+                        disabled={fail > 0 ? '' : 'false'}
                       >
                         {myFail}
                       </Button>
@@ -848,6 +849,7 @@ class Index extends Component {
                               }
                             : null
                         }
+                        disabled={total > 0 ? '' : 'false'}
                       >
                         {duplication}
                       </Button>
@@ -913,7 +915,7 @@ class Index extends Component {
                     <Option value="xml">xml</Option>
                   </Select>
                   &nbsp; &nbsp;
-                  <Button onClick={this.handleExport}>
+                  <Button onClick={this.handleExport} disabled={total > 0 ? '' : 'false'}>
                     <Icon type="upload" />
                     <FormattedMessage id="export" />
                   </Button>
