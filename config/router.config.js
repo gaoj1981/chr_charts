@@ -3,7 +3,7 @@ export default [
     path: '/',
     component: '../layouts/Danye',
     routes: [
-      { path: '/', redirect: './Index' },
+      { path: '/', redirect: '/Index' },
       {
         path: '/index',
         name: 'index',
