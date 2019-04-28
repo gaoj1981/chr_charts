@@ -22,6 +22,7 @@ class TimelineChart extends React.Component {
         y3: 'y3',
         y4: 'y4',
         y5: 'y5',
+        y6: 'y6',
       },
 
       data = [
@@ -32,19 +33,38 @@ class TimelineChart extends React.Component {
           y3: 0,
           y4: 0,
           y5: 0,
+          y6: 0,
         },
       ],
     } = this.props;
 
     // data.sort((a, b) => a.x - b.x);
     let max;
-    if (data[0] && data[0].y1 && data[0].y2 && data[0].y3 && data[0].y4 && data[0].y5) {
+    let min;
+    if (
+      data[0] &&
+      data[0].y1 &&
+      data[0].y2 &&
+      data[0].y3 &&
+      data[0].y4 &&
+      data[0].y5 &&
+      data[0].y6
+    ) {
       max = Math.max(
         [...data].sort((a, b) => b.y1 - a.y1)[0].y1,
         [...data].sort((a, b) => b.y2 - a.y2)[0].y2,
         [...data].sort((a, b) => b.y3 - a.y3)[0].y3,
         [...data].sort((a, b) => b.y4 - a.y4)[0].y4,
-        [...data].sort((a, b) => b.y5 - a.y5)[0].y5
+        [...data].sort((a, b) => b.y5 - a.y5)[0].y5,
+        [...data].sort((a, b) => b.y6 - a.y6)[0].y6
+      );
+      min = Math.min(
+        [...data].sort((a, b) => a.y1 - b.y1)[0].y1,
+        [...data].sort((a, b) => a.y2 - b.y2)[0].y2,
+        [...data].sort((a, b) => a.y3 - b.y3)[0].y3,
+        [...data].sort((a, b) => a.y4 - b.y4)[0].y4,
+        [...data].sort((a, b) => a.y5 - b.y5)[0].y5,
+        [...data].sort((a, b) => a.y6 - b.y6)[0].y6
       );
     }
 
@@ -73,12 +93,13 @@ class TimelineChart extends React.Component {
           newRow[titleMap.y3] = row.y3;
           newRow[titleMap.y4] = row.y4;
           newRow[titleMap.y5] = row.y5;
+          newRow[titleMap.y6] = row.y6;
           return newRow;
         },
       })
       .transform({
         type: 'fold',
-        fields: [titleMap.y1, titleMap.y2, titleMap.y3, titleMap.y4, titleMap.y5], // 展开字段集
+        fields: [titleMap.y1, titleMap.y2, titleMap.y3, titleMap.y4, titleMap.y5, titleMap.y6], // 展开字段集
         key: 'key', // key字段
         value: 'value', // value字段
       });
@@ -89,7 +110,7 @@ class TimelineChart extends React.Component {
       x: xid,
       value: {
         max,
-        min: 0,
+        min,
       },
     };
 
@@ -145,7 +166,7 @@ class TimelineChart extends React.Component {
               type="line"
               position="x*value"
               size={['key', [2, 2, 2, 1, 1]]}
-              color={['key', ['#1890FF', '#2FC25B', '#FACC14', '#888', '#666']]}
+              color={['key', ['#1890FF', '#2FC25B', '#FACC14', '#888', '#666', '#7B61B5']]}
             />
             <Legend
               name="key"

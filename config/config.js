@@ -54,7 +54,8 @@ const plugins = [
 } */
 
 export default {
-  hash: true,
+  // hash: true,
+  history: 'hash',
   // add for transfer to umi
   plugins,
   targets: {
@@ -75,7 +76,7 @@ export default {
   },
   proxy: {
     '/api': {
-      target: 'http://localhost:8088',
+      target: 'http://localhost:/',
       changeOrigin: true,
     },
   },

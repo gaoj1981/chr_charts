@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
-import { FormattedMessage } from 'umi/locale';
-import { Input, Select, DatePicker, Form, InputNumber } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { formatMessage } from 'umi/locale';
+import { Input, Select, DatePicker, Form, InputNumber, Cascader } from 'antd';
 import moment from 'moment';
 
 const InputGroup = Input.Group;
@@ -12,7 +12,7 @@ const dayFormat = 'YYYY/MM/DD';
 @Form.create()
 class GrupInput extends PureComponent {
   state = {
-    opVal: 'Day',
+    opVal: ['Day'],
   };
 
   // 获取月份中的日期1
@@ -32,10 +32,16 @@ class GrupInput extends PureComponent {
     return children;
   }
 
-  handleOption = value => {
+  handleOption = (value, selectedOptions) => {
+    console.log(selectedOptions);
     this.setState({
       opVal: value,
     });
+    if (selectedOptions[1]) {
+      const { setCompareType } = this.props;
+      const { value: val } = selectedOptions[1];
+      setCompareType(val);
+    }
   };
 
   childrenFile() {
@@ -44,33 +50,10 @@ class GrupInput extends PureComponent {
     const { getFieldDecorator } = form;
     const now = new Date();
     const children = [];
-    switch (opVal) {
+    switch (opVal[0]) {
       case 'Date':
         return (
-          <InputGroup compact>
-            <Select
-              showSearch
-              style={{ width: '30%' }}
-              value={opVal}
-              optionFilterProp="children"
-              onChange={this.handleOption}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option key="1" value="Day">
-                <FormattedMessage id="Date" />
-              </Option>
-              <Option key="2" value="Date">
-                <FormattedMessage id="Date Range" />
-              </Option>
-              <Option key="3" value="Scan">
-                <FormattedMessage id="Scan No." />
-              </Option>
-              <Option key="4" value="Last">
-                <FormattedMessage id="Last" />
-              </Option>
-            </Select>
+          <Fragment>
             {getFieldDecorator('days', {
               rules: [
                 {
@@ -83,101 +66,53 @@ class GrupInput extends PureComponent {
                 showTime={{ format: 'HH:mm' }}
                 format="YYYY-MM-DD HH:mm"
                 placeholder={['Start Time', 'End Time']}
-                style={{ width: '70%' }}
+                style={{ width: '65%' }}
               />
             )}
-          </InputGroup>
+          </Fragment>
         );
       case 'Scan':
         return (
-          <InputGroup compact>
-            <Select
-              showSearch
-              style={{ width: '30%' }}
-              value={opVal}
-              optionFilterProp="children"
-              onChange={this.handleOption}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option key="1" value="Day">
-                <FormattedMessage id="Date" />
-              </Option>
-              <Option key="2" value="Date">
-                <FormattedMessage id="Date Range" />
-              </Option>
-              <Option key="3" value="Scan">
-                <FormattedMessage id="Scan No." />
-              </Option>
-              <Option key="4" value="Last">
-                <FormattedMessage id="Last" />
-              </Option>
-            </Select>
-            <span style={{ width: '70%' }}>
-              {getFieldDecorator('Minimum', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'required!',
-                  },
-                  {
-                    pattern: /^(\d+)((?:\.\d+)?)$/,
-                    message: 'please enter a number',
-                  },
-                ],
-              })(
-                <InputNumber
-                  style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
-                  placeholder="Minimum"
-                />
-              )}
-              {getFieldDecorator('Maximum', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'required!',
-                  },
-                  {
-                    pattern: /^(\d+)((?:\.\d+)?)$/,
-                    message: 'please enter a number',
-                  },
-                ],
-              })(
-                <InputNumber
-                  style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
-                  placeholder="Maximum"
-                />
-              )}
-            </span>
-          </InputGroup>
+          <span style={{ width: '65%' }}>
+            {getFieldDecorator('Minimum', {
+              rules: [
+                {
+                  required: true,
+                  message: 'required!',
+                },
+                {
+                  pattern: /^(\d+)((?:\.\d+)?)$/,
+                  message: 'please enter a number',
+                },
+              ],
+            })(
+              <InputNumber
+                style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
+                placeholder="Minimum"
+              />
+            )}
+            {getFieldDecorator('Maximum', {
+              rules: [
+                {
+                  required: true,
+                  message: 'required!',
+                },
+                {
+                  pattern: /^(\d+)((?:\.\d+)?)$/,
+                  message: 'please enter a number',
+                },
+              ],
+            })(
+              <InputNumber
+                style={{ width: '50%', textAlign: 'center', borderLeft: 0 }}
+                placeholder="Maximum"
+              />
+            )}
+          </span>
         );
       case 'Last':
         return (
-          <InputGroup compact>
-            <Select
-              showSearch
-              style={{ width: '30%' }}
-              value={opVal}
-              optionFilterProp="children"
-              onChange={this.handleOption}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option key="1" value="Day">
-                <FormattedMessage id="Date" />
-              </Option>
-              <Option key="2" value="Date">
-                <FormattedMessage id="Date Range" />
-              </Option>
-              <Option key="3" value="Scan">
-                <FormattedMessage id="Scan No." />
-              </Option>
-              <Option key="4" value="Last">
-                <FormattedMessage id="Last" />
-              </Option>
-            </Select>
+          <Fragment>
             {getFieldDecorator('lastimum', {
               rules: [
                 {
@@ -197,46 +132,34 @@ class GrupInput extends PureComponent {
                 placeholder="last"
               />
             )}
-          </InputGroup>
+          </Fragment>
         );
       case 'Day':
         return (
-          <InputGroup compact>
-            <Select
-              showSearch
-              style={{ width: '30%' }}
-              value={opVal}
-              optionFilterProp="children"
-              onChange={this.handleOption}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              <Option key="1" value="Day">
-                <FormattedMessage id="Date" />
-              </Option>
-              <Option key="2" value="Date">
-                <FormattedMessage id="Date Range" />
-              </Option>
-              <Option key="3" value="Scan">
-                <FormattedMessage id="Scan No." />
-              </Option>
-              <Option key="4" value="Last">
-                <FormattedMessage id="Last" />
-              </Option>
-            </Select>
-            <span style={{ width: '70%' }}>
-              {getFieldDecorator('monthDay', {
-                initialValue: moment(now, dayFormat) || '',
-                rules: [
-                  {
-                    required: true,
-                    message: 'required!',
-                  },
-                ],
-              })(<DatePicker />)}
-            </span>
-          </InputGroup>
+          <span style={{ width: '65%' }}>
+            {getFieldDecorator('monthDay', {
+              initialValue: moment(now, dayFormat) || '',
+              rules: [
+                {
+                  required: true,
+                  message: 'required!',
+                },
+              ],
+            })(<DatePicker />)}
+          </span>
+        );
+      case 'duibi':
+        return (
+          <span style={{ width: '65%' }}>
+            {getFieldDecorator('ridui', {
+              rules: [
+                {
+                  required: true,
+                  message: 'required!',
+                },
+              ],
+            })(<InputNumber min={1} max={30} />)}
+          </span>
         );
       default:
         break;
@@ -245,7 +168,65 @@ class GrupInput extends PureComponent {
   }
 
   render() {
-    return <Form.Item>{this.childrenFile()}</Form.Item>;
+    const { opVal } = this.state;
+    const mDay = formatMessage({ id: 'Date' });
+    const range = formatMessage({ id: 'Date Range' });
+    const Scan = formatMessage({ id: 'Scan No.' });
+    const Last = formatMessage({ id: 'Last' });
+    const compare = formatMessage({ id: 'compare' });
+    const dayCompare = formatMessage({ id: 'day' });
+    const weekCompare = formatMessage({ id: 'week' });
+    const monthCompare = formatMessage({ id: 'month' });
+    const options = [
+      {
+        value: 'Day',
+        label: mDay,
+      },
+      {
+        value: 'Date',
+        label: range,
+      },
+      {
+        value: 'Scan',
+        label: Scan,
+      },
+      {
+        value: 'Last',
+        label: Last,
+      },
+      {
+        value: 'duibi',
+        label: compare,
+        children: [
+          {
+            value: 'dayDb',
+            label: dayCompare,
+          },
+          {
+            value: 'weekDb',
+            label: weekCompare,
+          },
+          {
+            value: 'monthDb',
+            label: monthCompare,
+          },
+        ],
+      },
+    ];
+    return (
+      <Form.Item>
+        <InputGroup compact>
+          <Cascader
+            style={{ width: '35%' }}
+            options={options}
+            placeholder="Please select"
+            onChange={this.handleOption}
+            value={opVal}
+          />
+          {this.childrenFile()}
+        </InputGroup>
+      </Form.Item>
+    );
   }
 }
 
