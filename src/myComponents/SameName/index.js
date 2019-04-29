@@ -7,6 +7,7 @@ import SameNameHoc from './SameNameHoc';
 
 const monthFormat = 'YYYY-MM';
 const myId = formatMessage({ id: 'ScanN' });
+const myDate = formatMessage({ id: 'Date' });
 
 @SameNameHoc
 @connect(({ charts }) => ({
@@ -90,7 +91,7 @@ class SameName extends PureComponent {
         align: 'center',
       },
       {
-        title: 'date',
+        title: `${myDate}`,
         dataIndex: 'date',
         key: 'date',
         align: 'center',
@@ -117,7 +118,7 @@ class SameName extends PureComponent {
     return (
       <Drawer
         title={`${formatMessage({
-          id: 'duplication',
+          id: 'Same',
         })}`}
         placement="left"
         closable={false}
@@ -143,7 +144,7 @@ class SameName extends PureComponent {
         {sameForm(this.props, this.childrenVisible) || null}
         <Drawer
           title={`${formatMessage({
-            id: 'duplication',
+            id: 'Same',
           })}`}
           placement="left"
           width={500}
