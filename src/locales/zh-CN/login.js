@@ -70,4 +70,5 @@ export default {
   host: '主机',
   times: '次数',
   Details: '详情',
+  NoData: '无数据',
 };

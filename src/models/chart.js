@@ -84,18 +84,18 @@ export default {
     },
     getContrastAnalyze(state, action) {
       const parm = [];
-      state.contrastZone.forEach((v, k) => {
-        console.log(v);
-        if (v !== 0) {
-          if (state.getContrastAnalyze[k]) {
-            parm.push(state.getContrastAnalyze[k]);
-          } else {
-            parm.push(action.payload);
-          }
-        } else {
-          parm.push([]);
+      if (state.getContrastAnalyze[0] === undefined) {
+        if (action.payload[0]) {
+          parm.push(action.payload);
         }
-      });
+      } else {
+        state.getContrastAnalyze.forEach(v => {
+          parm.push(v);
+        });
+        if (action.payload[0]) {
+          parm.push(action.payload);
+        }
+      }
       return {
         ...state,
         getContrastAnalyze: parm,

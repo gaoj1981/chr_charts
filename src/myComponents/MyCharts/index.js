@@ -1,14 +1,16 @@
 import React, { PureComponent, Suspense } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
-import { Tabs, Card } from 'antd';
+import { Tabs, Card, Collapse } from 'antd';
 import { formatMessage } from 'umi/locale';
 import OfflineData from '@/pages/charts/OfflineData';
 
 const { TabPane } = Tabs;
+const { Panel } = Collapse;
 const myWidth = formatMessage({ id: 'Width' });
 const myHeight = formatMessage({ id: 'Height' });
 const myVolume = formatMessage({ id: 'Volume' });
+const noData = formatMessage({ id: 'NoData' });
 
 @connect(({ charts }) => ({
   contrastAnalyze: charts.getContrastAnalyze,
@@ -17,6 +19,9 @@ const myVolume = formatMessage({ id: 'Volume' });
 class MyCharts extends PureComponent {
   state = {
     tabType: '1',
+    startDay: '',
+    endDay: '',
+    showArr: [],
   };
 
   componentWillMount() {
@@ -112,10 +117,17 @@ class MyCharts extends PureComponent {
       payload: parmZone,
       callback: () => {
         const { contrastZone } = this.props;
+        this.setState({
+          startDay: parmZone.start,
+          endDay: parmZone.end,
+        });
         if (!contrastZone[type]) {
           setmyLoading(0);
         } else {
           this.getAnalyze(parmZone);
+          const { showArr } = this.state;
+          showArr.push(type.toString());
+          this.setState({ showArr });
         }
       },
     });
@@ -128,7 +140,6 @@ class MyCharts extends PureComponent {
       service: 'getContrastAnalyze',
       payload: parm,
       callback: () => {
-        // const {contrastAnalyze} = this.props;
         isVisbaleChange(false);
         setmyLoading(0);
       },
@@ -137,12 +148,26 @@ class MyCharts extends PureComponent {
 
   render() {
     const { contrastZone, contrastAnalyze, type } = this.props;
-    const { tabType } = this.state;
+    const analyze = [];
+    let count = 0;
+    if (contrastZone.length > 0) {
+      contrastZone.forEach(v => {
+        if (v !== 0) {
+          if (contrastAnalyze[count]) {
+            analyze.push(contrastAnalyze[count]);
+            count += 1;
+          }
+        } else {
+          analyze.push([]);
+        }
+      });
+    }
+    const { tabType, startDay, endDay, showArr } = this.state;
     const carr = [];
     const carr1 = [];
     const carr2 = [];
     if (contrastAnalyze[0]) {
-      contrastAnalyze.forEach((val, key) => {
+      analyze.forEach((val, key) => {
         if (key === type) {
           val.forEach(v => {
             const aar = {
@@ -198,29 +223,42 @@ class MyCharts extends PureComponent {
       });
     }
     return (
-      <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
-        <TabPane tab={myWidth} key="1">
-          <Card bordered={false}>
-            <Suspense fallback={null}>
-              {tabType === '1' ? <OfflineData type="mm" zl="my" offlineChartData={carr} /> : null}
-            </Suspense>
-          </Card>
-        </TabPane>
-        <TabPane tab={myHeight} key="2">
-          <Card bordered={false}>
-            <Suspense fallback={null}>
-              {tabType === '2' ? <OfflineData type="mm" zl="my" offlineChartData={carr2} /> : null}
-            </Suspense>
-          </Card>
-        </TabPane>
-        <TabPane tab={myVolume} key="3">
-          <Card bordered={false}>
-            <Suspense fallback={null}>
-              {tabType === '3' ? <OfflineData type="mm³" zl="my" offlineChartData={carr1} /> : null}
-            </Suspense>
-          </Card>
-        </TabPane>
-      </Tabs>
+      <Collapse defaultActiveKey={showArr}>
+        <Panel
+          header={`${startDay}-${endDay}${showArr.indexOf(type.toString()) ? `(${noData})` : ''}`}
+          key={type}
+        >
+          <Tabs defaultActiveKey="1" onChange={this.handleChangeTab}>
+            <TabPane tab={myWidth} key="1">
+              <Card bordered={false}>
+                <Suspense fallback={null}>
+                  {tabType === '1' ? (
+                    <OfflineData type="mm" zl="my" offlineChartData={carr} />
+                  ) : null}
+                </Suspense>
+              </Card>
+            </TabPane>
+            <TabPane tab={myHeight} key="2">
+              <Card bordered={false}>
+                <Suspense fallback={null}>
+                  {tabType === '2' ? (
+                    <OfflineData type="mm" zl="my" offlineChartData={carr2} />
+                  ) : null}
+                </Suspense>
+              </Card>
+            </TabPane>
+            <TabPane tab={myVolume} key="3">
+              <Card bordered={false}>
+                <Suspense fallback={null}>
+                  {tabType === '3' ? (
+                    <OfflineData type="mm³" zl="my" offlineChartData={carr1} />
+                  ) : null}
+                </Suspense>
+              </Card>
+            </TabPane>
+          </Tabs>
+        </Panel>
+      </Collapse>
     );
   }
 }

@@ -42,6 +42,13 @@ class GrupInput extends PureComponent {
       const { value: val } = selectedOptions[1];
       setCompareType(val);
     }
+    const { setMyChartCz } = this.props;
+    setMyChartCz();
+  };
+
+  changeDibi = () => {
+    const { setMyChartCz } = this.props;
+    setMyChartCz();
   };
 
   childrenFile() {
@@ -158,7 +165,7 @@ class GrupInput extends PureComponent {
                   message: 'required!',
                 },
               ],
-            })(<InputNumber min={1} max={30} />)}
+            })(<InputNumber min={1} onChange={this.changeDibi} max={30} />)}
           </span>
         );
       default:

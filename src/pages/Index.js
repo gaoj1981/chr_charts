@@ -184,7 +184,13 @@ class Index extends Component {
         break;
       case 2:
         // children= <RangePicker format="YYYY-MM-DD" />;
-        children = <GrupInput form={form} setCompareType={this.setCompareType} />;
+        children = (
+          <GrupInput
+            form={form}
+            setCompareType={this.setCompareType}
+            setMyChartCz={this.setMyChartCz}
+          />
+        );
         break;
       case 3:
         children = <InputNumber onChane={() => this.handleStar()} style={{ width: '100%' }} />;
@@ -279,6 +285,14 @@ class Index extends Component {
         this.setState({ isContrast: false });
         this.getGroupResult(parm);
       }
+    });
+  };
+
+  // 初始化组件重载
+  setMyChartCz = () => {
+    this.setState({
+      isContrast: false,
+      isVisbale: false,
     });
   };
 
@@ -679,6 +693,7 @@ class Index extends Component {
     const { form } = this.props;
     const { getFieldValue } = form;
     const nub = getFieldValue('ridui');
+    console.log(isContrast);
     if (isContrast) {
       for (let i = 0; i < nub; i += 1) {
         child.push(
@@ -695,7 +710,7 @@ class Index extends Component {
         );
       }
     }
-    return child;
+    return <div>{child}</div>;
   };
 
   // 清空
