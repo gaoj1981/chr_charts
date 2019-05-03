@@ -850,7 +850,7 @@ class Index extends Component {
                               }
                             : null
                         }
-                        disabled={fail > 0 ? '' : 'false'}
+                        disabled={!fail > 0}
                       >
                         {myFail}
                       </Button>
@@ -864,7 +864,7 @@ class Index extends Component {
                               }
                             : null
                         }
-                        disabled={total > 0 ? '' : 'false'}
+                        disabled={!total > 0}
                       >
                         {duplication}
                       </Button>
@@ -930,7 +930,7 @@ class Index extends Component {
                     <Option value="xml">xml</Option>
                   </Select>
                   &nbsp; &nbsp;
-                  <Button onClick={this.handleExport} disabled={total > 0 ? '' : 'false'}>
+                  <Button onClick={this.handleExport} disabled={!total > 0}>
                     <Icon type="upload" />
                     <FormattedMessage id="export" />
                   </Button>

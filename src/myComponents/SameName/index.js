@@ -78,8 +78,6 @@ class SameName extends PureComponent {
     this.setState({
       cv: !!flag,
     });
-
-    console.log(nub);
   };
 
   childrenForm = items => {
