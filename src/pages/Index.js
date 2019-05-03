@@ -39,7 +39,7 @@ const myPass = formatMessage({ id: 'Pass/Fail' });
 const duplication = formatMessage({ id: 'Same' });
 const Total = formatMessage({ id: 'Total' });
 const myNaPass = formatMessage({ id: 'Pass' });
-const myFail = formatMessage({ id: 'fail' });
+const myFail = formatMessage({ id: 'Fail' });
 const ScanN = formatMessage({ id: 'ScanN' });
 const myMin = formatMessage({ id: 'Min' });
 const myMax = formatMessage({ id: 'Max' });
@@ -91,7 +91,7 @@ class Index extends Component {
       service: 'getlanguage',
       callback: () => {
         const { getlanguage } = this.props;
-        if (getlanguage === 'en') {
+        if (getlanguage === 'cn') {
           setLocale('en-US');
         } else {
           setLocale('zh-CN');

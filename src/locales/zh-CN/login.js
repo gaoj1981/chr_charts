@@ -58,7 +58,7 @@ export default {
   week: '周',
   month: '月',
   cancel: '取消',
-  fail: '失败',
+  Fail: '失败',
   Same: '同名',
   width: '宽',
   height: '高',

@@ -75,7 +75,7 @@ class MyDrawer extends PureComponent {
     return (
       <Drawer
         title={`${formatMessage({
-          id: 'fail',
+          id: 'Fail',
         })}`}
         placement="left"
         closable={false}
