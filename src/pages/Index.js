@@ -66,6 +66,7 @@ class Index extends Component {
     isVisbale: false,
     selectType: 'csv',
     sameVisible: false,
+    isDuibi: false,
   };
 
   componentWillMount() {
@@ -91,7 +92,7 @@ class Index extends Component {
       service: 'getlanguage',
       callback: () => {
         const { getlanguage } = this.props;
-        if (getlanguage === 'cn') {
+        if (getlanguage === 'en') {
           setLocale('en-US');
         } else {
           setLocale('zh-CN');
@@ -189,6 +190,7 @@ class Index extends Component {
             form={form}
             setCompareType={this.setCompareType}
             setMyChartCz={this.setMyChartCz}
+            isDuibiChange={this.isDuibiChange}
           />
         );
         break;
@@ -274,7 +276,7 @@ class Index extends Component {
               isContrast: true,
               isVisbale: true,
             });
-          }, 100);
+          }, 1);
         } else {
           this.setState({
             isContrast: true,
@@ -687,6 +689,12 @@ class Index extends Component {
     this.setState({ selectType: val });
   };
 
+  isDuibiChange = flag => {
+    this.setState({
+      isDuibi: !!flag,
+    });
+  };
+
   childrenFile = () => {
     const child = [];
     const { isContrast, isVisbale, compareType } = this.state;
@@ -725,13 +733,7 @@ class Index extends Component {
 
   render() {
     const { getAnalyze, zone, loading, groupResult, summaryResult, form } = this.props;
-    const { tabType, myLoading, isContrast, DrawerVisible, sameVisible } = this.state;
-    const { getFieldValue } = form;
-    const ridui = getFieldValue('ridui');
-    let isduibi = false;
-    if (ridui > 0) {
-      isduibi = true;
-    }
+    const { tabType, myLoading, isContrast, DrawerVisible, sameVisible, isDuibi } = this.state;
     const Piedata = [];
     const overPill = [];
     const carr = [];
@@ -815,7 +817,7 @@ class Index extends Component {
         <Form onSubmit={this.handleSearch}>
           <Row gutter={24}>{this.getFields()}</Row>
         </Form>
-        {isduibi ? (
+        {isDuibi ? (
           this.childrenFile()
         ) : (
           <Fragment>

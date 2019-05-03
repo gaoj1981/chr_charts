@@ -42,8 +42,13 @@ class GrupInput extends PureComponent {
       const { value: val } = selectedOptions[1];
       setCompareType(val);
     }
-    const { setMyChartCz } = this.props;
+    const { setMyChartCz, isDuibiChange } = this.props;
     setMyChartCz();
+    if (value[0] === 'duibi') {
+      isDuibiChange(true);
+    } else {
+      isDuibiChange(false);
+    }
   };
 
   changeDibi = () => {
