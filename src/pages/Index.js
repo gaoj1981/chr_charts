@@ -705,6 +705,7 @@ class Index extends Component {
             isVisbale={isVisbale}
             isVisbaleChange={this.isVisbaleChange}
             isContrast={isContrast}
+            all={nub}
             type={i}
           />
         );

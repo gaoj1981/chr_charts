@@ -109,7 +109,7 @@ class MyCharts extends PureComponent {
   };
 
   getZone = parmZone => {
-    const { dispatch, type, setmyLoading } = this.props;
+    const { dispatch, type, setmyLoading, all } = this.props;
     setmyLoading(1);
     dispatch({
       type: 'charts/reqCommon',
@@ -122,7 +122,10 @@ class MyCharts extends PureComponent {
           endDay: parmZone.end,
         });
         if (!contrastZone[type]) {
-          setmyLoading(0);
+          const indexNub = all - 1;
+          if (indexNub === type) {
+            setmyLoading(0);
+          }
         } else {
           this.getAnalyze(parmZone);
           const { showArr } = this.state;
@@ -134,14 +137,17 @@ class MyCharts extends PureComponent {
   };
 
   getAnalyze = parm => {
-    const { dispatch, isVisbaleChange, setmyLoading } = this.props;
+    const { dispatch, isVisbaleChange, setmyLoading, all, type } = this.props;
     dispatch({
       type: 'charts/reqCommon',
       service: 'getContrastAnalyze',
       payload: parm,
       callback: () => {
         isVisbaleChange(false);
-        setmyLoading(0);
+        const indexNub = all - 1;
+        if (indexNub === type) {
+          setmyLoading(0);
+        }
       },
     });
   };
