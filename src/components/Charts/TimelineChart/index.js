@@ -39,7 +39,7 @@ class TimelineChart extends React.Component {
     } = this.props;
 
     // data.sort((a, b) => a.x - b.x);
-    let max;
+    // let max;
     let min;
     if (
       data[0] &&
@@ -50,14 +50,14 @@ class TimelineChart extends React.Component {
       data[0].y5 &&
       data[0].y6
     ) {
-      max = Math.max(
-        [...data].sort((a, b) => b.y1 - a.y1)[0].y1,
-        [...data].sort((a, b) => b.y2 - a.y2)[0].y2,
-        [...data].sort((a, b) => b.y3 - a.y3)[0].y3,
-        [...data].sort((a, b) => b.y4 - a.y4)[0].y4,
-        [...data].sort((a, b) => b.y5 - a.y5)[0].y5,
-        [...data].sort((a, b) => b.y6 - a.y6)[0].y6
-      );
+      // max = Math.max(
+      //   [...data].sort((a, b) => b.y1 - a.y1)[0].y1,
+      //   [...data].sort((a, b) => b.y2 - a.y2)[0].y2,
+      //   [...data].sort((a, b) => b.y3 - a.y3)[0].y3,
+      //   [...data].sort((a, b) => b.y4 - a.y4)[0].y4,
+      //   [...data].sort((a, b) => b.y5 - a.y5)[0].y5,
+      //   [...data].sort((a, b) => b.y6 - a.y6)[0].y6
+      // );
       min = Math.min(
         [...data].sort((a, b) => a.y1 - b.y1)[0].y1,
         [...data].sort((a, b) => a.y2 - b.y2)[0].y2,
@@ -109,7 +109,7 @@ class TimelineChart extends React.Component {
     const cols = {
       x: xid,
       value: {
-        max,
+        // max,
         min,
       },
     };
