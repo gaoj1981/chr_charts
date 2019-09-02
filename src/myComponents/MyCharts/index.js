@@ -103,8 +103,10 @@ class MyCharts extends PureComponent {
         end: allTime[1],
         scanScope: values.Minimum ? [Number(values.Minimum), Number(values.Maximum)] : null,
         limit: values.lastimum || null,
+        type,
       };
       this.getZone(parm);
+      this.getAnalyze(parm);
     });
   };
 
@@ -112,7 +114,7 @@ class MyCharts extends PureComponent {
     const { dispatch, type, setmyLoading, all } = this.props;
     setmyLoading(1);
     dispatch({
-      type: 'charts/reqCommon',
+      type: 'charts/myZonCommon',
       service: 'getContrastZone',
       payload: parmZone,
       callback: () => {
@@ -127,10 +129,9 @@ class MyCharts extends PureComponent {
             setmyLoading(0);
           }
         } else {
-          this.getAnalyze(parmZone);
-          const { showArr } = this.state;
-          showArr.push(type.toString());
-          this.setState({ showArr });
+          // const { showArr } = this.state;
+          // showArr.push(type.toString());
+          // this.setState({ showArr });
         }
       },
     });
@@ -139,7 +140,7 @@ class MyCharts extends PureComponent {
   getAnalyze = parm => {
     const { dispatch, isVisbaleChange, setmyLoading, all, type } = this.props;
     dispatch({
-      type: 'charts/reqCommon',
+      type: 'charts/myCommon',
       service: 'getContrastAnalyze',
       payload: parm,
       callback: () => {
@@ -156,12 +157,20 @@ class MyCharts extends PureComponent {
     const { contrastZone, contrastAnalyze, type } = this.props;
     const analyze = [];
     let count = 0;
+
     if (contrastZone.length > 0) {
-      contrastZone.forEach(v => {
-        if (v !== 0) {
+      contrastZone.forEach((v, k) => {
+        if (v.data[0]) {
           if (contrastAnalyze[count]) {
-            analyze.push(contrastAnalyze[count]);
+            analyze.push({
+              type: contrastZone[k].type,
+              datas: contrastAnalyze[count],
+              zone: contrastZone[k].data,
+            });
             count += 1;
+            const { showArr } = this.state;
+            showArr.push(contrastZone[k].type.toString());
+            this.setState({ showArr });
           }
         } else {
           analyze.push([]);
@@ -174,21 +183,18 @@ class MyCharts extends PureComponent {
     const carr2 = [];
     if (contrastAnalyze[0]) {
       analyze.forEach((val, key) => {
-        if (key === type) {
-          val.forEach(v => {
+        if (analyze[key].type === type) {
+          val.datas.forEach(v => {
+            console.log(33333);
+            console.log(val.zone[0]);
+            console.log(v);
             const aar = {
               x: v.id,
               y1: v.w,
               y2: v.W[0],
               y3: v.W[1],
-              y4:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].width.maximum,
-              y5:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].width.minimum,
+              y4: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].width.maximum,
+              y5: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].width.minimum,
               y6: v.wc,
             };
             carr.push(aar);
@@ -197,14 +203,8 @@ class MyCharts extends PureComponent {
               y1: v.v,
               y2: v.V[0],
               y3: v.V[1],
-              y4:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].volume.maximum,
-              y5:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].volume.minimum,
+              y4: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].volume.maximum,
+              y5: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].volume.minimum,
               y6: v.vc,
             };
             carr1.push(aar1);
@@ -213,14 +213,8 @@ class MyCharts extends PureComponent {
               y1: v.h,
               y2: v.H[0],
               y3: v.H[1],
-              y4:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].height.maximum,
-              y5:
-                contrastZone[type].zones[v.z] === undefined
-                  ? 0
-                  : contrastZone[type].zones[v.z].height.minimum,
+              y4: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].height.maximum,
+              y5: val.zone[0].zones[v.z] === undefined ? 0 : val.zone[0].zones[v.z].height.minimum,
               y6: v.hc,
             };
             carr2.push(aar2);
