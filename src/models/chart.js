@@ -61,6 +61,32 @@ export default {
         if (callback) callback();
       }
     },
+    *myCommon({ service, payload, callback }, { call, put }) {
+      const postParamObj = servToReduce[service];
+      const response = yield call(postParamObj.method, payload);
+      //
+      const { reduce } = postParamObj;
+      if (reduce) {
+        yield put({
+          type: reduce,
+          payload: response,
+        });
+      }
+      if (callback) callback();
+    },
+    *myZonCommon({ service, payload, callback }, { call, put }) {
+      const postParamObj = servToReduce[service];
+      const response = yield call(postParamObj.method, payload);
+      //
+      const { reduce } = postParamObj;
+      if (reduce) {
+        yield put({
+          type: reduce,
+          payload: { type: payload.type, data: response },
+        });
+      }
+      if (callback) callback();
+    },
   },
 
   reducers: {
@@ -107,7 +133,7 @@ export default {
         if (action.payload[0]) {
           parm = action.payload;
         } else {
-          parm = [0];
+          parm = [action.payload];
         }
       } else {
         parm = [];
@@ -118,8 +144,7 @@ export default {
           const [index] = action.payload;
           parm.push(index);
         } else {
-          const index = 0;
-          parm.push(index);
+          parm.push(action.payload);
         }
       }
       return {
