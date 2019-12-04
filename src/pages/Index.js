@@ -1,4 +1,4 @@
-import React, { Component, Suspense, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage, setLocale } from 'umi/locale';
 import { connect } from 'dva';
 import { saveAs } from 'file-saver';
@@ -13,13 +13,10 @@ import {
   message,
   InputNumber,
   Icon,
-  Tabs,
   Spin,
   Statistic,
 } from 'antd';
 import moment from 'moment';
-import PieChart from './charts/PieChart';
-import OverPillar from './charts/OverPillar';
 import GrupInput from './charts/GrupInput';
 import MyCharts from '@/myComponents/MyCharts';
 import MyDrawer from '@/myComponents/MyDrawer';
@@ -27,15 +24,9 @@ import editForm from '@/myComponents/MyDrawer/myForm';
 import SameName from '@/myComponents/SameName';
 import sameForm from '@/myComponents/SameName/myForm';
 
-const OfflineData = React.lazy(() => import('./charts/OfflineData'));
 const monthFormat = 'YYYY-MM';
 const { Option } = Select;
-const { TabPane } = Tabs;
 const exists = formatMessage({ id: 'data not exists' });
-const myWidth = formatMessage({ id: 'Width' });
-const myHeight = formatMessage({ id: 'Height' });
-const myVolume = formatMessage({ id: 'Volume' });
-const myPass = formatMessage({ id: 'Pass/Fail' });
 const duplication = formatMessage({ id: 'Same' });
 const Total = formatMessage({ id: 'Total' });
 const myNaPass = formatMessage({ id: 'Pass' });
@@ -357,21 +348,25 @@ class Index extends Component {
   };
 
   getAnalyze = parm => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'charts/reqCommon',
-      service: 'getAnalyze',
-      payload: parm,
-      callback: () => {
-        const { getAnalyze } = this.props;
-        if (!getAnalyze[0]) {
-          message.warning(`${exists}`);
-        }
-        this.summaryResult(parm);
-        this.setState({
-          myLoading: 0,
-        });
-      },
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'charts/reqCommon',
+    //   service: 'getAnalyze',
+    //   payload: parm,
+    //   callback: () => {
+    //     const { getAnalyze } = this.props;
+    //     if (!getAnalyze[0]) {
+    //       message.warning(`${exists}`);
+    //     }
+    //     this.summaryResult(parm);
+    //     this.setState({
+    //       myLoading: 0,
+    //     });
+    //   },
+    // });
+    this.summaryResult(parm);
+    this.setState({
+      myLoading: 0,
     });
   };
 
@@ -732,8 +727,8 @@ class Index extends Component {
   }
 
   render() {
-    const { getAnalyze, zone, loading, groupResult, summaryResult, form } = this.props;
-    const { tabType, myLoading, isContrast, DrawerVisible, sameVisible, isDuibi } = this.state;
+    const { getAnalyze, zone, groupResult, summaryResult, form } = this.props;
+    const { myLoading, isContrast, DrawerVisible, sameVisible, isDuibi } = this.state;
     const Piedata = [];
     const overPill = [];
     const carr = [];
@@ -918,89 +913,6 @@ class Index extends Component {
                 </Col>
               </Row>
             </div>
-            <Tabs
-              defaultActiveKey="1"
-              type="card"
-              onChange={this.handleChangeTab}
-              tabBarExtraContent={
-                <div>
-                  <Select
-                    defaultValue="csv"
-                    style={{ width: 120 }}
-                    onChange={this.handleChangeSelect}
-                  >
-                    <Option value="csv">csv</Option>
-                    <Option value="xml">xml</Option>
-                  </Select>
-                  &nbsp; &nbsp;
-                  <Button onClick={this.handleExport} disabled={!total > 0}>
-                    <Icon type="upload" />
-                    <FormattedMessage id="export" />
-                  </Button>
-                </div>
-              }
-            >
-              <TabPane tab={myWidth} key="1">
-                <Card bordered={false}>
-                  <Suspense fallback={null}>
-                    {tabType === '1' ? (
-                      <OfflineData
-                        loading={loading}
-                        type="mm"
-                        zl="width"
-                        zone={zone}
-                        getAnalyze={getAnalyze}
-                        offlineChartData={carr}
-                      />
-                    ) : null}
-                  </Suspense>
-                </Card>
-              </TabPane>
-              <TabPane tab={myHeight} key="2">
-                <Card bordered={false}>
-                  <Suspense fallback={null}>
-                    {tabType === '2' ? (
-                      <OfflineData
-                        loading={loading}
-                        type="mm"
-                        zl="height"
-                        zone={zone}
-                        getAnalyze={getAnalyze}
-                        offlineChartData={carr2}
-                      />
-                    ) : null}
-                  </Suspense>
-                </Card>
-              </TabPane>
-              <TabPane tab={myVolume} key="3">
-                <Card bordered={false}>
-                  <Suspense fallback={null}>
-                    {tabType === '3' ? (
-                      <OfflineData
-                        loading={loading}
-                        type="mm³"
-                        zl="volume"
-                        zone={zone}
-                        getAnalyze={getAnalyze}
-                        offlineChartData={carr1}
-                      />
-                    ) : null}
-                  </Suspense>
-                </Card>
-              </TabPane>
-              <TabPane tab={myPass} key="4">
-                <Card bordered={false}>
-                  <Row>
-                    <Col span={12} style={{ marginTop: 110 }}>
-                      {tabType === '4' ? <PieChart data={Piedata} /> : null}
-                    </Col>
-                    <Col span={12} style={{ marginTop: 110 }}>
-                      {tabType === '4' ? <OverPillar data={overPill} /> : null}
-                    </Col>
-                  </Row>
-                </Card>
-              </TabPane>
-            </Tabs>
             {DrawerVisible ? <MyDrawer {...editProps} /> : null}
             {sameVisible ? <SameName {...sameProps} /> : null}
           </Fragment>

@@ -6,11 +6,12 @@ export async function getLingJian(params) {
 }
 
 export async function getAnalyze(params) {
+  console.log(params);
   // return request(`/api/analyze?${stringify(params)}`);
-  return request('/api/analyze', {
-    method: 'POST',
-    body: params,
-  });
+  // return request('/api/analyze', {
+  //   method: 'POST',
+  //   body: params,
+  // });
 }
 
 export async function getZone(params) {
@@ -45,10 +46,11 @@ export async function summaryResult(params) {
 }
 
 export async function getContrastAnalyze(params) {
-  return request('/api/analyze', {
-    method: 'POST',
-    body: params,
-  });
+  console.log(params);
+  // return request('/api/analyze', {
+  //   method: 'POST',
+  //   body: params,
+  // });
 }
 
 export async function getContrastZone(params) {

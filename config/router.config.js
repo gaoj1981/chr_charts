@@ -16,17 +16,6 @@ export default [
         ],
       },
       {
-        path: '/indexSlider',
-        name: 'indexSlider',
-        routes: [
-          {
-            path: '/IndexSlider',
-            name: 'indexSlider',
-            component: './IndexSlider',
-          },
-        ],
-      },
-      {
         hideInMenu: true,
         name: 'exception',
         icon: 'warning',
